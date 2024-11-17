@@ -7,13 +7,30 @@ import {
 } from '@ant-design/pro-components'
 import styles from './index.module.less'
 import logo from '../../assets/logo.png'
-import { useSendMessageLazyQuery } from '../../generated'
+import { useLoginLazyQuery, useSendMessageLazyQuery } from '../../generated'
+import { message } from 'antd'
+
+interface IValues {
+  tel: string
+  code: string
+}
 
 export default function Page() {
   const [sendMessage] = useSendMessageLazyQuery()
+  const [login] = useLoginLazyQuery()
+
+  async function onFinish(values: IValues) {
+    const res = await login({
+      variables: {
+        tel: values.tel,
+        code: values.code,
+      },
+    })
+    if (!res.data?.login) return message.error('登录失败')
+  }
   return (
     <div className={styles.container}>
-      <LoginFormPage logo={logo}>
+      <LoginFormPage logo={logo} onFinish={onFinish}>
         {/* <Tabs
           centered
           activeKey={loginType}
@@ -28,7 +45,7 @@ export default function Page() {
               size: 'large',
               prefix: <MobileOutlined className={'prefixIcon'} />,
             }}
-            name="mobile"
+            name="tel"
             placeholder={'手机号'}
             rules={[
               {
@@ -49,7 +66,7 @@ export default function Page() {
             captchaProps={{
               size: 'large',
             }}
-            phoneName="mobile"
+            phoneName="tel"
             placeholder={'请输入验证码'}
             captchaTextRender={(timing, count) => {
               if (timing) {
@@ -57,7 +74,7 @@ export default function Page() {
               }
               return '获取验证码'
             }}
-            name="captcha"
+            name="code"
             rules={[
               {
                 required: true,
@@ -65,11 +82,16 @@ export default function Page() {
               },
             ]}
             onGetCaptcha={async (phone) => {
-              sendMessage({
+              const res = await sendMessage({
                 variables: {
                   tel: phone,
                 },
               })
+              if (res.data?.sendMessage) {
+                message.success('验证码发送成功！')
+              } else {
+                message.error('验证码发送失败！')
+              }
             }}
           />
         </>

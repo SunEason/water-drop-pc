@@ -63,10 +63,17 @@ export type OssParams = {
 export type Query = {
   __typename?: 'Query'
   OSSInfo?: Maybe<OssParams>
+  /** 登录 */
+  login?: Maybe<Scalars['Boolean']['output']>
   /** 发送验证码 */
-  sendMessage?: Maybe<Scalars['String']['output']>
+  sendMessage?: Maybe<Scalars['Boolean']['output']>
   user?: Maybe<User>
   users?: Maybe<Array<User>>
+}
+
+export type QueryLoginArgs = {
+  code: Scalars['String']['input']
+  tel: Scalars['String']['input']
 }
 
 export type QuerySendMessageArgs = {
@@ -79,22 +86,22 @@ export type QueryUserArgs = {
 
 export type User = {
   __typename?: 'User'
-  account: Scalars['String']['output']
+  account?: Maybe<Scalars['String']['output']>
   createTime: Scalars['DateTime']['output']
   desc?: Maybe<Scalars['String']['output']>
   id: Scalars['String']['output']
   name: Scalars['String']['output']
   password: Scalars['String']['output']
-  tel?: Maybe<Scalars['String']['output']>
+  tel: Scalars['String']['output']
   updateTime: Scalars['DateTime']['output']
 }
 
 export type UserInput = {
-  account: Scalars['String']['input']
+  account?: InputMaybe<Scalars['String']['input']>
   desc?: InputMaybe<Scalars['String']['input']>
   name: Scalars['String']['input']
   password: Scalars['String']['input']
-  tel?: InputMaybe<Scalars['String']['input']>
+  tel: Scalars['String']['input']
 }
 
 export type SendMessageQueryVariables = Exact<{
@@ -103,8 +110,15 @@ export type SendMessageQueryVariables = Exact<{
 
 export type SendMessageQuery = {
   __typename?: 'Query'
-  sendMessage?: string | null
+  sendMessage?: boolean | null
 }
+
+export type LoginQueryVariables = Exact<{
+  tel: Scalars['String']['input']
+  code: Scalars['String']['input']
+}>
+
+export type LoginQuery = { __typename?: 'Query'; login?: boolean | null }
 
 export type GetOssInfoQueryVariables = Exact<{ [key: string]: never }>
 
@@ -129,9 +143,9 @@ export type GetUsersQuery = {
     id: string
     name: string
     password: string
-    account: string
+    account?: string | null
     desc?: string | null
-    tel?: string | null
+    tel: string
     createTime: string
     updateTime: string
   }> | null
@@ -148,9 +162,9 @@ export type GetUserQuery = {
     id: string
     name: string
     password: string
-    account: string
+    account?: string | null
     desc?: string | null
-    tel?: string | null
+    tel: string
     createTime: string
     updateTime: string
   } | null
@@ -252,6 +266,71 @@ export type SendMessageSuspenseQueryHookResult = ReturnType<
 export type SendMessageQueryResult = Apollo.QueryResult<
   SendMessageQuery,
   SendMessageQueryVariables
+>
+export const LoginDocument = gql`
+  query Login($tel: String!, $code: String!) {
+    login(tel: $tel, code: $code)
+  }
+`
+
+/**
+ * __useLoginQuery__
+ *
+ * To run a query within a React component, call `useLoginQuery` and pass it any options that fit your needs.
+ * When your component renders, `useLoginQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useLoginQuery({
+ *   variables: {
+ *      tel: // value for 'tel'
+ *      code: // value for 'code'
+ *   },
+ * });
+ */
+export function useLoginQuery(
+  baseOptions: Apollo.QueryHookOptions<LoginQuery, LoginQueryVariables> &
+    ({ variables: LoginQueryVariables; skip?: boolean } | { skip: boolean }),
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useQuery<LoginQuery, LoginQueryVariables>(
+    LoginDocument,
+    options,
+  )
+}
+export function useLoginLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<LoginQuery, LoginQueryVariables>,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useLazyQuery<LoginQuery, LoginQueryVariables>(
+    LoginDocument,
+    options,
+  )
+}
+export function useLoginSuspenseQuery(
+  baseOptions?:
+    | Apollo.SkipToken
+    | Apollo.SuspenseQueryHookOptions<LoginQuery, LoginQueryVariables>,
+) {
+  const options =
+    baseOptions === Apollo.skipToken
+      ? baseOptions
+      : { ...defaultOptions, ...baseOptions }
+  return Apollo.useSuspenseQuery<LoginQuery, LoginQueryVariables>(
+    LoginDocument,
+    options,
+  )
+}
+export type LoginQueryHookResult = ReturnType<typeof useLoginQuery>
+export type LoginLazyQueryHookResult = ReturnType<typeof useLoginLazyQuery>
+export type LoginSuspenseQueryHookResult = ReturnType<
+  typeof useLoginSuspenseQuery
+>
+export type LoginQueryResult = Apollo.QueryResult<
+  LoginQuery,
+  LoginQueryVariables
 >
 export const GetOssInfoDocument = gql`
   query GetOSSInfo {

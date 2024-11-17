@@ -5,3 +5,9 @@ export const getMessage = gql`
     sendMessage(tel: $tel)
   }
 `
+
+export const login = gql`
+  query Login($tel: String!, $code: String!) {
+    login(tel: $tel, code: $code)
+  }
+`

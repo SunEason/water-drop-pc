@@ -18,6 +18,5 @@ export default [
       'react/react-in-jsx-scope': 0,
       // 'prettier/prettier': 'error',
     },
-    cache: false,
   },
 ]
