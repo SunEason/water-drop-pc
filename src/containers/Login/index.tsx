@@ -5,11 +5,12 @@ import {
   ProFormCheckbox,
   ProFormText,
 } from '@ant-design/pro-components'
-import { message } from 'antd'
 import styles from './index.module.less'
 import logo from '../../assets/logo.png'
+import { useSendMessageLazyQuery } from '../../generated'
 
 export default function Page() {
+  const [sendMessage] = useSendMessageLazyQuery()
   return (
     <div className={styles.container}>
       <LoginFormPage logo={logo}>
@@ -64,8 +65,11 @@ export default function Page() {
               },
             ]}
             onGetCaptcha={async (phone) => {
-              console.log(phone)
-              message.success('获取验证码成功！验证码为：1234')
+              sendMessage({
+                variables: {
+                  tel: phone,
+                },
+              })
             }}
           />
         </>
