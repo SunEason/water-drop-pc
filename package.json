@@ -28,6 +28,7 @@
     "@graphql-codegen/client-preset": "4.4.0",
     "@graphql-codegen/typescript-react-apollo": "^4.3.2",
     "@nabla/vite-plugin-eslint": "^2.0.4",
+    "@types/node": "^22.10.0",
     "@types/react": "^18.3.10",
     "@types/react-dom": "^18.3.0",
     "@vitejs/plugin-react": "^4.3.2",
