@@ -31,10 +31,21 @@ export type Scalars = {
   DateTime: { input: string; output: string }
 }
 
+export type AuthLogin = {
+  __typename?: 'AuthLogin'
+  /** 用户id */
+  success: Scalars['Boolean']['output']
+  token?: Maybe<Scalars['String']['output']>
+}
+
 export type Mutation = {
   __typename?: 'Mutation'
   createUser?: Maybe<User>
+  /** 登录 */
+  login?: Maybe<AuthLogin>
   removeUser?: Maybe<User>
+  /** 发送验证码 */
+  sendMessage?: Maybe<Scalars['Boolean']['output']>
   updateUser?: Maybe<User>
 }
 
@@ -42,8 +53,17 @@ export type MutationCreateUserArgs = {
   input: UserInput
 }
 
+export type MutationLoginArgs = {
+  code: Scalars['String']['input']
+  tel: Scalars['String']['input']
+}
+
 export type MutationRemoveUserArgs = {
   id: Scalars['String']['input']
+}
+
+export type MutationSendMessageArgs = {
+  tel: Scalars['String']['input']
 }
 
 export type MutationUpdateUserArgs = {
@@ -63,21 +83,8 @@ export type OssParams = {
 export type Query = {
   __typename?: 'Query'
   OSSInfo?: Maybe<OssParams>
-  /** 登录 */
-  login?: Maybe<Scalars['Boolean']['output']>
-  /** 发送验证码 */
-  sendMessage?: Maybe<Scalars['Boolean']['output']>
   user?: Maybe<User>
   users?: Maybe<Array<User>>
-}
-
-export type QueryLoginArgs = {
-  code: Scalars['String']['input']
-  tel: Scalars['String']['input']
-}
-
-export type QuerySendMessageArgs = {
-  tel: Scalars['String']['input']
 }
 
 export type QueryUserArgs = {
@@ -104,21 +111,28 @@ export type UserInput = {
   tel: Scalars['String']['input']
 }
 
-export type SendMessageQueryVariables = Exact<{
+export type SendMessageMutationVariables = Exact<{
   tel: Scalars['String']['input']
 }>
 
-export type SendMessageQuery = {
-  __typename?: 'Query'
+export type SendMessageMutation = {
+  __typename?: 'Mutation'
   sendMessage?: boolean | null
 }
 
-export type LoginQueryVariables = Exact<{
+export type LoginMutationVariables = Exact<{
   tel: Scalars['String']['input']
   code: Scalars['String']['input']
 }>
 
-export type LoginQuery = { __typename?: 'Query'; login?: boolean | null }
+export type LoginMutation = {
+  __typename?: 'Mutation'
+  login?: {
+    __typename?: 'AuthLogin'
+    success: boolean
+    token?: string | null
+  } | null
+}
 
 export type GetOssInfoQueryVariables = Exact<{ [key: string]: never }>
 
@@ -190,147 +204,101 @@ export type UpdateUserMutation = {
 }
 
 export const SendMessageDocument = gql`
-  query SendMessage($tel: String!) {
+  mutation SendMessage($tel: String!) {
     sendMessage(tel: $tel)
   }
 `
+export type SendMessageMutationFn = Apollo.MutationFunction<
+  SendMessageMutation,
+  SendMessageMutationVariables
+>
 
 /**
- * __useSendMessageQuery__
+ * __useSendMessageMutation__
  *
- * To run a query within a React component, call `useSendMessageQuery` and pass it any options that fit your needs.
- * When your component renders, `useSendMessageQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
+ * To run a mutation, you first call `useSendMessageMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useSendMessageMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
  *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
  *
  * @example
- * const { data, loading, error } = useSendMessageQuery({
+ * const [sendMessageMutation, { data, loading, error }] = useSendMessageMutation({
  *   variables: {
  *      tel: // value for 'tel'
  *   },
  * });
  */
-export function useSendMessageQuery(
-  baseOptions: Apollo.QueryHookOptions<
-    SendMessageQuery,
-    SendMessageQueryVariables
-  > &
-    (
-      | { variables: SendMessageQueryVariables; skip?: boolean }
-      | { skip: boolean }
-    ),
-) {
-  const options = { ...defaultOptions, ...baseOptions }
-  return Apollo.useQuery<SendMessageQuery, SendMessageQueryVariables>(
-    SendMessageDocument,
-    options,
-  )
-}
-export function useSendMessageLazyQuery(
-  baseOptions?: Apollo.LazyQueryHookOptions<
-    SendMessageQuery,
-    SendMessageQueryVariables
+export function useSendMessageMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    SendMessageMutation,
+    SendMessageMutationVariables
   >,
 ) {
   const options = { ...defaultOptions, ...baseOptions }
-  return Apollo.useLazyQuery<SendMessageQuery, SendMessageQueryVariables>(
+  return Apollo.useMutation<SendMessageMutation, SendMessageMutationVariables>(
     SendMessageDocument,
     options,
   )
 }
-export function useSendMessageSuspenseQuery(
-  baseOptions?:
-    | Apollo.SkipToken
-    | Apollo.SuspenseQueryHookOptions<
-        SendMessageQuery,
-        SendMessageQueryVariables
-      >,
-) {
-  const options =
-    baseOptions === Apollo.skipToken
-      ? baseOptions
-      : { ...defaultOptions, ...baseOptions }
-  return Apollo.useSuspenseQuery<SendMessageQuery, SendMessageQueryVariables>(
-    SendMessageDocument,
-    options,
-  )
-}
-export type SendMessageQueryHookResult = ReturnType<typeof useSendMessageQuery>
-export type SendMessageLazyQueryHookResult = ReturnType<
-  typeof useSendMessageLazyQuery
+export type SendMessageMutationHookResult = ReturnType<
+  typeof useSendMessageMutation
 >
-export type SendMessageSuspenseQueryHookResult = ReturnType<
-  typeof useSendMessageSuspenseQuery
->
-export type SendMessageQueryResult = Apollo.QueryResult<
-  SendMessageQuery,
-  SendMessageQueryVariables
+export type SendMessageMutationResult =
+  Apollo.MutationResult<SendMessageMutation>
+export type SendMessageMutationOptions = Apollo.BaseMutationOptions<
+  SendMessageMutation,
+  SendMessageMutationVariables
 >
 export const LoginDocument = gql`
-  query Login($tel: String!, $code: String!) {
-    login(tel: $tel, code: $code)
+  mutation Login($tel: String!, $code: String!) {
+    login(tel: $tel, code: $code) {
+      success
+      token
+    }
   }
 `
+export type LoginMutationFn = Apollo.MutationFunction<
+  LoginMutation,
+  LoginMutationVariables
+>
 
 /**
- * __useLoginQuery__
+ * __useLoginMutation__
  *
- * To run a query within a React component, call `useLoginQuery` and pass it any options that fit your needs.
- * When your component renders, `useLoginQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
+ * To run a mutation, you first call `useLoginMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useLoginMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
  *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
  *
  * @example
- * const { data, loading, error } = useLoginQuery({
+ * const [loginMutation, { data, loading, error }] = useLoginMutation({
  *   variables: {
  *      tel: // value for 'tel'
  *      code: // value for 'code'
  *   },
  * });
  */
-export function useLoginQuery(
-  baseOptions: Apollo.QueryHookOptions<LoginQuery, LoginQueryVariables> &
-    ({ variables: LoginQueryVariables; skip?: boolean } | { skip: boolean }),
+export function useLoginMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    LoginMutation,
+    LoginMutationVariables
+  >,
 ) {
   const options = { ...defaultOptions, ...baseOptions }
-  return Apollo.useQuery<LoginQuery, LoginQueryVariables>(
+  return Apollo.useMutation<LoginMutation, LoginMutationVariables>(
     LoginDocument,
     options,
   )
 }
-export function useLoginLazyQuery(
-  baseOptions?: Apollo.LazyQueryHookOptions<LoginQuery, LoginQueryVariables>,
-) {
-  const options = { ...defaultOptions, ...baseOptions }
-  return Apollo.useLazyQuery<LoginQuery, LoginQueryVariables>(
-    LoginDocument,
-    options,
-  )
-}
-export function useLoginSuspenseQuery(
-  baseOptions?:
-    | Apollo.SkipToken
-    | Apollo.SuspenseQueryHookOptions<LoginQuery, LoginQueryVariables>,
-) {
-  const options =
-    baseOptions === Apollo.skipToken
-      ? baseOptions
-      : { ...defaultOptions, ...baseOptions }
-  return Apollo.useSuspenseQuery<LoginQuery, LoginQueryVariables>(
-    LoginDocument,
-    options,
-  )
-}
-export type LoginQueryHookResult = ReturnType<typeof useLoginQuery>
-export type LoginLazyQueryHookResult = ReturnType<typeof useLoginLazyQuery>
-export type LoginSuspenseQueryHookResult = ReturnType<
-  typeof useLoginSuspenseQuery
->
-export type LoginQueryResult = Apollo.QueryResult<
-  LoginQuery,
-  LoginQueryVariables
+export type LoginMutationHookResult = ReturnType<typeof useLoginMutation>
+export type LoginMutationResult = Apollo.MutationResult<LoginMutation>
+export type LoginMutationOptions = Apollo.BaseMutationOptions<
+  LoginMutation,
+  LoginMutationVariables
 >
 export const GetOssInfoDocument = gql`
   query GetOSSInfo {

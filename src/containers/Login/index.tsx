@@ -7,7 +7,7 @@ import {
 } from '@ant-design/pro-components'
 import styles from './index.module.less'
 import logo from '../../assets/logo.png'
-import { useLoginLazyQuery, useSendMessageLazyQuery } from '../../generated'
+import { useLoginMutation, useSendMessageMutation } from '../../generated'
 import { message } from 'antd'
 
 interface IValues {
@@ -16,8 +16,8 @@ interface IValues {
 }
 
 export default function Page() {
-  const [sendMessage] = useSendMessageLazyQuery()
-  const [login] = useLoginLazyQuery()
+  const [sendMessage] = useSendMessageMutation()
+  const [login] = useLoginMutation()
 
   async function onFinish(values: IValues) {
     const res = await login({
