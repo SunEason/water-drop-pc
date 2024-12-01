@@ -1,13 +1,13 @@
 import { ApolloClient, createHttpLink, InMemoryCache } from '@apollo/client'
 import { setContext } from '@apollo/client/link/context'
-import { AUTH_TOKEN, BASE_URL } from '../consts'
 
 const httpsLink = createHttpLink({
-  uri: BASE_URL,
+  uri: import.meta.env.VITE_GRAPHQL_URL,
 })
 
+console.log(import.meta.env)
 const authLink = setContext((_, { headers }) => {
-  const token = localStorage.getItem(AUTH_TOKEN)
+  const token = localStorage.getItem(import.meta.env.VITE_AUTH_TOKEN)
   return {
     headers: {
       ...headers,
