@@ -9,15 +9,19 @@ import styles from './index.module.less'
 import logo from '../../assets/logo.png'
 import { useLoginMutation, useSendMessageMutation } from '../../generated'
 import { message } from 'antd'
+import { useNavigate } from 'react-router-dom'
 
 interface IValues {
   tel: string
   code: string
+  autoLogin: boolean
 }
 
 export default function Page() {
   const [sendMessage] = useSendMessageMutation()
   const [login] = useLoginMutation()
+
+  const nav = useNavigate()
 
   async function onFinish(values: IValues) {
     const res = await login({
@@ -27,6 +31,15 @@ export default function Page() {
       },
     })
     if (!res.data?.login) return message.error('登录失败')
+    if (res.data?.login.success && res.data?.login.token) {
+      message.success('登录成功')
+      nav('/home')
+      if (!values.autoLogin) return
+      localStorage.setItem(
+        import.meta.env.VITE_AUTH_TOKEN,
+        res.data?.login.token,
+      )
+    }
   }
   return (
     <div className={styles.container}>
