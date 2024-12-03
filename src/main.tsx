@@ -8,9 +8,11 @@ import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import './index.css'
 import { routes } from './route/index.tsx'
 import Error404 from './containers/Error404/index.tsx'
+import UserInfo from './components/UserInfo.tsx'
 
 createRoot(document.getElementById('root')!).render(
   <ApolloProvider client={client}>
+    <UserInfo />
     <BrowserRouter>
       <Routes>
         {routes.map((route) => {

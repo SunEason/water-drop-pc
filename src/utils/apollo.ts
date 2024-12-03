@@ -5,7 +5,6 @@ const httpsLink = createHttpLink({
   uri: import.meta.env.VITE_GRAPHQL_URL,
 })
 
-console.log(import.meta.env)
 const authLink = setContext((_, { headers }) => {
   const token = localStorage.getItem(import.meta.env.VITE_AUTH_TOKEN)
   return {

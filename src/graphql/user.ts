@@ -45,3 +45,18 @@ export const UpdateUser = gql`
     }
   }
 `
+
+export const GetUserInfo = gql`
+  query GetUserInfo {
+    getUserInfo {
+      id
+      name
+      password
+      tel
+      desc
+      account
+      createTime
+      updateTime
+    }
+  }
+`
