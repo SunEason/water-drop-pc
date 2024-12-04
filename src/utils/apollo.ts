@@ -6,7 +6,9 @@ const httpsLink = createHttpLink({
 })
 
 const authLink = setContext((_, { headers }) => {
-  const token = localStorage.getItem(import.meta.env.VITE_AUTH_TOKEN)
+  const token =
+    sessionStorage.getItem(import.meta.env.VITE_AUTH_TOKEN) ||
+    localStorage.getItem(import.meta.env.VITE_AUTH_TOKEN)
   return {
     headers: {
       ...headers,

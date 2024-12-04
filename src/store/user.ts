@@ -10,10 +10,10 @@ export const connect = connectFactory(key, defaultValue)
 export const useGetUserInfo = async () => {
   const { setStore } = useUserContext()
   const { data, error } = await useGetUserInfoQuery()
-  if (error) {
+  if (error || !data?.getUserInfo) {
     // TODO: 不可以直接跳转，会出发react重新执行，陷入死循环
     if (window.location.pathname !== '/login') {
-      window.location.href = '/login'
+      window.location.href = `/login?orgUrl=${window.location.pathname}`
       return
     }
   }

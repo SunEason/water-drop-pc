@@ -9,7 +9,7 @@ import styles from './index.module.less'
 import logo from '../../assets/logo.png'
 import { useLoginMutation, useSendMessageMutation } from '../../generated'
 import { message } from 'antd'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useSearchParams } from 'react-router-dom'
 
 interface IValues {
   tel: string
@@ -18,6 +18,7 @@ interface IValues {
 }
 
 export default function Page() {
+  const [params] = useSearchParams()
   const [sendMessage] = useSendMessageMutation()
   const [login] = useLoginMutation()
 
@@ -33,12 +34,20 @@ export default function Page() {
     if (!res.data?.login) return message.error('登录失败')
     if (res.data?.login.success && res.data?.login.token) {
       message.success('登录成功')
-      nav('/home')
-      if (!values.autoLogin) return
-      localStorage.setItem(
-        import.meta.env.VITE_AUTH_TOKEN,
-        res.data?.login.token,
-      )
+      nav(params.get('orgUrl') || '/')
+      if (values.autoLogin) {
+        sessionStorage.setItem(import.meta.env.VITE_AUTH_TOKEN, '')
+        localStorage.setItem(
+          import.meta.env.VITE_AUTH_TOKEN,
+          res.data?.login.token,
+        )
+      } else {
+        localStorage.setItem(import.meta.env.VITE_AUTH_TOKEN, '')
+        sessionStorage.setItem(
+          import.meta.env.VITE_AUTH_TOKEN,
+          res.data?.login.token,
+        )
+      }
     }
   }
   return (
