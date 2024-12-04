@@ -1,6 +1,6 @@
 /* eslint-disable */
 import { createContext, useContext, useMemo, useState } from 'react'
-import { IPropsChild } from '../types'
+import { IPropsChild } from '@/types'
 
 type StoreItem = Record<string, any>
 

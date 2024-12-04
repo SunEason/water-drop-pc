@@ -1,5 +1,5 @@
-import { useGetUserInfoQuery } from '../generated'
-import { connectFactory, useStore } from '../utils/contextFactory'
+import { useGetUserInfoQuery } from '@/generated'
+import { connectFactory, useStore } from '@/utils/contextFactory'
 
 const key = 'userInfo' as const
 const defaultValue = {}

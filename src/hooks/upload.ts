@@ -1,4 +1,4 @@
-import { useGetOssInfoQuery } from '../generated'
+import { useGetOssInfoQuery } from '@/generated'
 
 export function useUpload() {
   const { data } = useGetOssInfoQuery()
