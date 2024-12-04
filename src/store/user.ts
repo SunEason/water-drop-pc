@@ -12,8 +12,10 @@ export const useGetUserInfo = async () => {
   const { data, error } = await useGetUserInfoQuery()
   if (error) {
     // TODO: 不可以直接跳转，会出发react重新执行，陷入死循环
-    // window.location.href = '/login'
-    return
+    if (window.location.pathname !== '/login') {
+      window.location.href = '/login'
+      return
+    }
   }
   if (!data?.getUserInfo) return
   setStore(data.getUserInfo)

@@ -1,8 +1,9 @@
 import { connect, useGetUserInfo } from '../store/user'
+import { IPropsChild } from '../types'
 
-function UserInfo() {
+function UserInfo({ children }: IPropsChild) {
   useGetUserInfo()
-  return null
+  return <div>{children}</div>
 }
 
 export default connect(UserInfo)

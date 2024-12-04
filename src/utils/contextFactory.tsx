@@ -1,5 +1,6 @@
 /* eslint-disable */
 import { createContext, useContext, useMemo, useState } from 'react'
+import { IPropsChild } from '../types'
 
 type StoreItem = Record<string, any>
 
@@ -9,16 +10,12 @@ interface IStore {
   setStore: (payload: StoreItem) => void
 }
 
-interface IProps {
-  children: React.ReactNode
-}
-
 function getCxtProvider(
   key: string,
   defaultValue: StoreItem,
   AppContext: React.Context<IStore>,
 ) {
-  return ({ children }: IProps) => {
+  return ({ children }: IPropsChild) => {
     const [store, setStore] = useState(defaultValue)
     const value = useMemo(
       () => ({
@@ -37,7 +34,7 @@ const cxtCache = new Map<string, Cxt>()
 class Cxt {
   defaultStore: IStore
   AppContext: React.Context<IStore>
-  Provider: ({ children }: IProps) => JSX.Element
+  Provider: ({ children }: IPropsChild) => JSX.Element
   constructor(key: string, defaultValue: StoreItem) {
     this.defaultStore = {
       key,
