@@ -10,6 +10,7 @@ import logo from '../../assets/logo.png'
 import { useLoginMutation, useSendMessageMutation } from '../../generated'
 import { message } from 'antd'
 import { useNavigate, useSearchParams } from 'react-router-dom'
+import { useTitle } from '@/hooks/useTitle'
 
 interface IValues {
   tel: string
@@ -23,6 +24,8 @@ export default function Page() {
   const [login] = useLoginMutation()
 
   const nav = useNavigate()
+
+  useTitle('登录')
 
   async function onFinish(values: IValues) {
     const res = await login({

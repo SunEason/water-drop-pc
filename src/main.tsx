@@ -12,8 +12,8 @@ import UserInfo from '@/components/UserInfo.tsx'
 
 createRoot(document.getElementById('root')!).render(
   <ApolloProvider client={client}>
-    <UserInfo>
-      <BrowserRouter>
+    <BrowserRouter>
+      <UserInfo>
         <Routes>
           {routes.map((route) => {
             return (
@@ -26,7 +26,7 @@ createRoot(document.getElementById('root')!).render(
           })}
           <Route path="*" element={<Error404 />} />
         </Routes>
-      </BrowserRouter>
-    </UserInfo>
+      </UserInfo>
+    </BrowserRouter>
   </ApolloProvider>,
 )
