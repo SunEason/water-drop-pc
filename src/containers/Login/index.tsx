@@ -11,6 +11,7 @@ import { useLoginMutation, useSendMessageMutation } from '../../generated'
 import { message } from 'antd'
 import { useNavigate, useSearchParams } from 'react-router-dom'
 import { useTitle } from '@/hooks/useTitle'
+import { useUserContext } from '@/store/user'
 
 interface IValues {
   tel: string
@@ -22,6 +23,8 @@ export default function Page() {
   const [params] = useSearchParams()
   const [sendMessage] = useSendMessageMutation()
   const [login] = useLoginMutation()
+
+  const { store } = useUserContext()
 
   const nav = useNavigate()
 
@@ -36,8 +39,7 @@ export default function Page() {
     })
     if (!res.data?.login) return message.error('登录失败')
     if (res.data?.login.success && res.data?.login.token) {
-      message.success('登录成功')
-      nav(params.get('orgUrl') || '/')
+      store?.refreshHandler?.()
       if (values.autoLogin) {
         sessionStorage.setItem(import.meta.env.VITE_AUTH_TOKEN, '')
         localStorage.setItem(
@@ -51,6 +53,8 @@ export default function Page() {
           res.data?.login.token,
         )
       }
+      message.success('登录成功')
+      nav(params.get('orgUrl') || '/')
     }
   }
   return (

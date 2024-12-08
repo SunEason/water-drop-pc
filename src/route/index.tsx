@@ -1,15 +1,20 @@
+import Error404 from '@/containers/Error404'
 import Home from '@/containers/Home'
-import Login from '@/containers/Login'
+import { HomeOutlined } from '@ant-design/icons'
 
 export const routes = [
   {
-    path: '/',
+    key: 'home',
+    path: '/home',
     element: Home,
-    title: '首页',
+    name: '首页',
+    icon: <HomeOutlined />,
   },
   {
-    path: '/login',
-    element: Login,
-    title: '登录',
+    Key: '404',
+    path: '*',
+    element: Error404,
+    hideInMenu: true,
+    name: '404',
   },
 ]
