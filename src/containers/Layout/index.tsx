@@ -7,7 +7,7 @@ import {
 import style from './index.module.less'
 import { Link, useNavigate, useOutlet } from 'react-router-dom'
 import { useUserContext } from '@/store/user'
-import { routes } from '@/route'
+import { routes } from '@/route/menus'
 import { Dropdown } from 'antd'
 import { LogoutOutlined } from '@ant-design/icons'
 

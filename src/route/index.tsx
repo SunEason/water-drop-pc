@@ -1,20 +1,10 @@
-import Error404 from '@/containers/Error404'
 import Home from '@/containers/Home'
-import { HomeOutlined } from '@ant-design/icons'
+import My from '@/containers/My'
+import { ROUTE_KEY } from './menus'
+import Error404 from '@/containers/Error404'
 
-export const routes = [
-  {
-    key: 'home',
-    path: '/home',
-    element: Home,
-    name: '首页',
-    icon: <HomeOutlined />,
-  },
-  {
-    Key: '404',
-    path: '*',
-    element: Error404,
-    hideInMenu: true,
-    name: '404',
-  },
-]
+export const ROUTE_COMPONENT = {
+  [ROUTE_KEY.HOME]: Home,
+  [ROUTE_KEY.MY]: My,
+  [ROUTE_KEY.NOT_FOUND]: Error404,
+}

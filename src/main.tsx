@@ -6,10 +6,11 @@ import { BrowserRouter, Route, Routes } from 'react-router-dom'
 
 // import App from '@/App.tsx'
 import '@/index.css'
-import { routes } from '@/route/index.tsx'
+import { routes } from '@/route/menus'
 import UserInfo from '@/components/UserInfo.tsx'
 import Login from '@/containers/Login'
 import Layout from '@/containers/Layout'
+import { ROUTE_COMPONENT } from './route'
 
 createRoot(document.getElementById('root')!).render(
   <ApolloProvider client={client}>
@@ -19,10 +20,11 @@ createRoot(document.getElementById('root')!).render(
           <Route path="/Login" element={<Login />} />
           <Route path="/" element={<Layout />}>
             {routes.map((route) => {
+              const Component = ROUTE_COMPONENT[route.key]
               return (
                 <Route
                   path={route.path}
-                  element={<route.element />}
+                  element={<Component />}
                   key={route.path}
                 />
               )
