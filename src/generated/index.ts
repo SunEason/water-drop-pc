@@ -47,6 +47,7 @@ export type Mutation = {
   /** 发送验证码 */
   sendMessage?: Maybe<Scalars['Boolean']['output']>
   updateUser?: Maybe<User>
+  updateUserInfo?: Maybe<User>
 }
 
 export type MutationCreateUserArgs = {
@@ -69,6 +70,11 @@ export type MutationSendMessageArgs = {
 export type MutationUpdateUserArgs = {
   id: Scalars['String']['input']
   input: UserInput
+}
+
+export type MutationUpdateUserInfoArgs = {
+  id: Scalars['String']['input']
+  input: UserUpdateInput
 }
 
 export type OssParams = {
@@ -95,6 +101,7 @@ export type QueryUserArgs = {
 export type User = {
   __typename?: 'User'
   account?: Maybe<Scalars['String']['output']>
+  avatar?: Maybe<Scalars['String']['output']>
   createTime: Scalars['DateTime']['output']
   desc?: Maybe<Scalars['String']['output']>
   id: Scalars['String']['output']
@@ -110,6 +117,12 @@ export type UserInput = {
   name: Scalars['String']['input']
   password: Scalars['String']['input']
   tel: Scalars['String']['input']
+}
+
+export type UserUpdateInput = {
+  avatar?: InputMaybe<Scalars['String']['input']>
+  desc?: InputMaybe<Scalars['String']['input']>
+  name?: InputMaybe<Scalars['String']['input']>
 }
 
 export type SendMessageMutationVariables = Exact<{
@@ -216,6 +229,28 @@ export type GetUserInfoQuery = {
     tel: string
     desc?: string | null
     account?: string | null
+    avatar?: string | null
+    createTime: string
+    updateTime: string
+  } | null
+}
+
+export type UpdateUserInfoMutationVariables = Exact<{
+  id: Scalars['String']['input']
+  input: UserUpdateInput
+}>
+
+export type UpdateUserInfoMutation = {
+  __typename?: 'Mutation'
+  updateUserInfo?: {
+    __typename?: 'User'
+    id: string
+    name: string
+    password: string
+    tel: string
+    desc?: string | null
+    account?: string | null
+    avatar?: string | null
     createTime: string
     updateTime: string
   } | null
@@ -657,6 +692,7 @@ export const GetUserInfoDocument = gql`
       tel
       desc
       account
+      avatar
       createTime
       updateTime
     }
@@ -729,4 +765,63 @@ export type GetUserInfoSuspenseQueryHookResult = ReturnType<
 export type GetUserInfoQueryResult = Apollo.QueryResult<
   GetUserInfoQuery,
   GetUserInfoQueryVariables
+>
+export const UpdateUserInfoDocument = gql`
+  mutation UpdateUserInfo($id: String!, $input: UserUpdateInput!) {
+    updateUserInfo(id: $id, input: $input) {
+      id
+      name
+      password
+      tel
+      desc
+      account
+      avatar
+      createTime
+      updateTime
+    }
+  }
+`
+export type UpdateUserInfoMutationFn = Apollo.MutationFunction<
+  UpdateUserInfoMutation,
+  UpdateUserInfoMutationVariables
+>
+
+/**
+ * __useUpdateUserInfoMutation__
+ *
+ * To run a mutation, you first call `useUpdateUserInfoMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateUserInfoMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateUserInfoMutation, { data, loading, error }] = useUpdateUserInfoMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useUpdateUserInfoMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    UpdateUserInfoMutation,
+    UpdateUserInfoMutationVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useMutation<
+    UpdateUserInfoMutation,
+    UpdateUserInfoMutationVariables
+  >(UpdateUserInfoDocument, options)
+}
+export type UpdateUserInfoMutationHookResult = ReturnType<
+  typeof useUpdateUserInfoMutation
+>
+export type UpdateUserInfoMutationResult =
+  Apollo.MutationResult<UpdateUserInfoMutation>
+export type UpdateUserInfoMutationOptions = Apollo.BaseMutationOptions<
+  UpdateUserInfoMutation,
+  UpdateUserInfoMutationVariables
 >

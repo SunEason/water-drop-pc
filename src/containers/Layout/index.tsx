@@ -1,8 +1,4 @@
-import {
-  MenuDataItem,
-  PageContainer,
-  ProLayout,
-} from '@ant-design/pro-components'
+import { MenuDataItem, ProLayout } from '@ant-design/pro-components'
 
 import style from './index.module.less'
 import { Link, useNavigate, useOutlet } from 'react-router-dom'
@@ -76,7 +72,7 @@ function Layout() {
       }}
       menuItemRender={menuItemRender}
     >
-      <PageContainer>{outlet}</PageContainer>
+      {outlet}
     </ProLayout>
   )
 }

@@ -55,6 +55,23 @@ export const GetUserInfo = gql`
       tel
       desc
       account
+      avatar
+      createTime
+      updateTime
+    }
+  }
+`
+
+export const UpdateUserInfo = gql`
+  mutation UpdateUserInfo($id: String!, $input: UserUpdateInput!) {
+    updateUserInfo(id: $id, input: $input) {
+      id
+      name
+      password
+      tel
+      desc
+      account
+      avatar
       createTime
       updateTime
     }
