@@ -8,6 +8,7 @@ export const GetOSSInfo = gql`
       signature
       accessId
       host
+      dir
     }
   }
 `

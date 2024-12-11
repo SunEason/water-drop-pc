@@ -15,7 +15,7 @@ export const useGetUserInfo = () => {
   const { loading, refetch } = useGetUserInfoQuery({
     onCompleted: (data) => {
       if (data.getUserInfo) {
-        setStore({ ...data.getUserInfo })
+        setStore({ ...data.getUserInfo, refreshHandler: refetch })
         if (location.pathname.startsWith('/login')) {
           nav('/')
         }

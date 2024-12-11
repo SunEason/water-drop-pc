@@ -1,4 +1,4 @@
-import { Col, message, Row } from 'antd'
+import { Col, Form, message, Row } from 'antd'
 import styles from './index.module.less'
 import {
   PageContainer,
@@ -50,10 +50,12 @@ function My() {
               input: {
                 name: values.name,
                 desc: values.desc,
+                avatar: values.avatar?.url || '',
               },
             },
           })
           if (res.data?.updateUserInfo) {
+            store.refreshHandler()
             message.success('提交成功')
             return
           }
@@ -76,7 +78,9 @@ function My() {
             />
           </Col>
           <Col>
-            <OSSImageUpload />
+            <Form.Item name="avatar">
+              <OSSImageUpload />
+            </Form.Item>
           </Col>
         </Row>
       </ProForm>

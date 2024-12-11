@@ -80,6 +80,7 @@ export type MutationUpdateUserInfoArgs = {
 export type OssParams = {
   __typename?: 'OSSParams'
   accessId: Scalars['String']['output']
+  dir: Scalars['String']['output']
   expire: Scalars['String']['output']
   host: Scalars['String']['output']
   policy: Scalars['String']['output']
@@ -159,6 +160,7 @@ export type GetOssInfoQuery = {
     signature: string
     accessId: string
     host: string
+    dir: string
   } | null
 }
 
@@ -361,6 +363,7 @@ export const GetOssInfoDocument = gql`
       signature
       accessId
       host
+      dir
     }
   }
 `

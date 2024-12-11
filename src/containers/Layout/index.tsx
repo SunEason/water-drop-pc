@@ -3,9 +3,10 @@ import { MenuDataItem, ProLayout } from '@ant-design/pro-components'
 import style from './index.module.less'
 import { Link, useNavigate, useOutlet } from 'react-router-dom'
 import { useUserContext } from '@/store/user'
-import { routes } from '@/route/menus'
+import { ROUTE_KEY, routes } from '@/route/menus'
 import { Dropdown } from 'antd'
-import { LogoutOutlined } from '@ant-design/icons'
+import { HomeOutlined, LogoutOutlined } from '@ant-design/icons'
+import { useRouter } from '@/hooks'
 
 const menuItemRender = (props: MenuDataItem, defaultDom: React.ReactNode) => {
   return <Link to={props.path || '/'}>{defaultDom}</Link>
@@ -14,6 +15,7 @@ const menuItemRender = (props: MenuDataItem, defaultDom: React.ReactNode) => {
 function Layout() {
   const outlet = useOutlet()
   const nav = useNavigate()
+  const router = useRouter()
   const { store } = useUserContext()
 
   const layout = () => {
@@ -26,21 +28,21 @@ function Layout() {
     <ProLayout
       layout="mix"
       siderWidth={130}
-      // avatarProps={{
-      //   src: '',
-      //   title: store.tel,
-      //   size: 'small',
-      //   onClick: layout,
-      // }}
       avatarProps={{
-        src: 'https://gw.alipayobjects.com/zos/antfincdn/efFD%24IOql2/weixintupian_20170331104822.jpg',
+        src: store.avatar || null,
         size: 'small',
-        title: store.tel,
+        title: store.name,
         render: (_props, dom) => {
           return (
             <Dropdown
               menu={{
                 items: [
+                  {
+                    key: 'userInfo',
+                    icon: <HomeOutlined />,
+                    label: '个人中心',
+                    onClick: () => router.go(ROUTE_KEY.MY),
+                  },
                   {
                     key: 'logout',
                     icon: <LogoutOutlined />,
