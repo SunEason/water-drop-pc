@@ -13,6 +13,7 @@ export const useGetUserInfo = () => {
   const nav = useNavigate()
   const { setStore } = useUserContext()
   const { loading, refetch } = useGetUserInfoQuery({
+    notifyOnNetworkStatusChange: true,
     onCompleted: (data) => {
       if (data.getUserInfo) {
         setStore({ ...data.getUserInfo, refreshHandler: refetch })
