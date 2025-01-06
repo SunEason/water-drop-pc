@@ -11,6 +11,7 @@ export const ROUTE_KEY = {
   HOME: 'home',
   NOT_FOUND: '404',
   MY: 'my',
+  ORG: 'org',
 }
 export type RouteKey = keyof typeof ROUTE_KEY
 
@@ -18,6 +19,11 @@ export const ROUTE_CONFIG: Record<string, IRoute> = {
   [ROUTE_KEY.HOME]: {
     path: 'home',
     name: '首页',
+    icon: <HomeOutlined />,
+  },
+  [ROUTE_KEY.ORG]: {
+    path: 'org',
+    name: '组织信息',
     icon: <HomeOutlined />,
   },
   [ROUTE_KEY.MY]: {
