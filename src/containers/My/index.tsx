@@ -25,9 +25,11 @@ function My() {
         tel: store.tel,
         name: store.name,
         desc: store.desc,
-        avatar: {
-          url: store.avatar,
-        },
+        avatar: store.avatar
+          ? {
+              url: store.avatar,
+            }
+          : undefined,
       })
     }
   }, [store])
