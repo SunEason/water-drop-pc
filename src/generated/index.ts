@@ -40,14 +40,21 @@ export type AuthLogin = {
 
 export type Mutation = {
   __typename?: 'Mutation'
+  createOrganization?: Maybe<Organization>
   createUser?: Maybe<User>
   /** 登录 */
   login?: Maybe<AuthLogin>
+  removeOrganization?: Maybe<Scalars['Boolean']['output']>
   removeUser?: Maybe<User>
   /** 发送验证码 */
   sendMessage?: Maybe<Scalars['Boolean']['output']>
+  updateOrganization?: Maybe<Organization>
   updateUser?: Maybe<User>
   updateUserInfo?: Maybe<User>
+}
+
+export type MutationCreateOrganizationArgs = {
+  input: MutationOrganizationInput
 }
 
 export type MutationCreateUserArgs = {
@@ -59,12 +66,21 @@ export type MutationLoginArgs = {
   tel: Scalars['String']['input']
 }
 
+export type MutationRemoveOrganizationArgs = {
+  id: Scalars['String']['input']
+}
+
 export type MutationRemoveUserArgs = {
   id: Scalars['String']['input']
 }
 
 export type MutationSendMessageArgs = {
   tel: Scalars['String']['input']
+}
+
+export type MutationUpdateOrganizationArgs = {
+  id: Scalars['String']['input']
+  input: MutationOrganizationInput
 }
 
 export type MutationUpdateUserArgs = {
@@ -77,6 +93,23 @@ export type MutationUpdateUserInfoArgs = {
   input: UserUpdateInput
 }
 
+export type MutationOrganizationInput = {
+  address?: InputMaybe<Scalars['String']['input']>
+  businessLicense: Scalars['String']['input']
+  description?: InputMaybe<Scalars['String']['input']>
+  frontImages?: InputMaybe<Array<OrgImageInput>>
+  identityCardBackImg: Scalars['String']['input']
+  identityCardFrontImg: Scalars['String']['input']
+  latitude?: InputMaybe<Scalars['String']['input']>
+  logo: Scalars['String']['input']
+  longitude?: InputMaybe<Scalars['String']['input']>
+  name: Scalars['String']['input']
+  otherImages?: InputMaybe<Array<OrgImageInput>>
+  roomImages?: InputMaybe<Array<OrgImageInput>>
+  tags?: InputMaybe<Scalars['String']['input']>
+  tel?: InputMaybe<Scalars['String']['input']>
+}
+
 export type OssParams = {
   __typename?: 'OSSParams'
   accessId: Scalars['String']['output']
@@ -87,16 +120,96 @@ export type OssParams = {
   signature: Scalars['String']['output']
 }
 
+/**  Organization Images: front, room, other  */
+export type OrgImage = {
+  __typename?: 'OrgImage'
+  id: Scalars['String']['output']
+  remark?: Maybe<Scalars['String']['output']>
+  url: Scalars['String']['output']
+}
+
+export type OrgImageInput = {
+  remark?: InputMaybe<Scalars['String']['input']>
+  url: Scalars['String']['input']
+}
+
+/**  Organization  */
+export type Organization = {
+  __typename?: 'Organization'
+  address?: Maybe<Scalars['String']['output']>
+  businessLicense: Scalars['String']['output']
+  createTime: Scalars['DateTime']['output']
+  description?: Maybe<Scalars['String']['output']>
+  frontImages?: Maybe<Array<OrgImage>>
+  id: Scalars['String']['output']
+  identityCardBackImg: Scalars['String']['output']
+  identityCardFrontImg: Scalars['String']['output']
+  latitude?: Maybe<Scalars['String']['output']>
+  logo: Scalars['String']['output']
+  longitude?: Maybe<Scalars['String']['output']>
+  name?: Maybe<Scalars['String']['output']>
+  otherImages?: Maybe<Array<OrgImage>>
+  roomImages?: Maybe<Array<OrgImage>>
+  tags?: Maybe<Scalars['String']['output']>
+  tel?: Maybe<Scalars['String']['output']>
+  updateTime: Scalars['DateTime']['output']
+}
+
+export type PageOrganization = {
+  __typename?: 'PageOrganization'
+  organizations?: Maybe<Array<Organization>>
+  pageInfo: PageInfo
+}
+
+export type PageOrganizationInput = {
+  name?: InputMaybe<Scalars['String']['input']>
+  pageInput: PageInput
+}
+
 export type Query = {
   __typename?: 'Query'
   OSSInfo?: Maybe<OssParams>
+  getOrganization?: Maybe<Organization>
   getUserInfo?: Maybe<User>
+  pageOrganization?: Maybe<PageOrganization>
+  students?: Maybe<Students>
   user?: Maybe<User>
   users?: Maybe<Array<User>>
 }
 
+export type QueryGetOrganizationArgs = {
+  id: Scalars['String']['input']
+}
+
+export type QueryPageOrganizationArgs = {
+  input?: InputMaybe<PageOrganizationInput>
+}
+
+export type QueryStudentsArgs = {
+  input: PageStudentInput
+}
+
 export type QueryUserArgs = {
   id: Scalars['String']['input']
+}
+
+export type Student = {
+  __typename?: 'Student'
+  account?: Maybe<Scalars['String']['output']>
+  avatar?: Maybe<Scalars['String']['output']>
+  createTime: Scalars['DateTime']['output']
+  desc?: Maybe<Scalars['String']['output']>
+  id: Scalars['String']['output']
+  name: Scalars['String']['output']
+  password: Scalars['String']['output']
+  tel: Scalars['String']['output']
+  updateTime: Scalars['DateTime']['output']
+}
+
+export type Students = {
+  __typename?: 'Students'
+  pageInfo?: Maybe<PageInfo>
+  students?: Maybe<Array<Maybe<Student>>>
 }
 
 export type User = {
@@ -126,6 +239,23 @@ export type UserUpdateInput = {
   name?: InputMaybe<Scalars['String']['input']>
 }
 
+export type PageInfo = {
+  __typename?: 'pageInfo'
+  current: Scalars['Int']['output']
+  pageSize: Scalars['Int']['output']
+  total: Scalars['Int']['output']
+}
+
+export type PageInput = {
+  current: Scalars['Int']['input']
+  pageSize: Scalars['Int']['input']
+}
+
+export type PageStudentInput = {
+  name?: InputMaybe<Scalars['String']['input']>
+  pageInput: PageInput
+}
+
 export type SendMessageMutationVariables = Exact<{
   tel: Scalars['String']['input']
 }>
@@ -146,6 +276,58 @@ export type LoginMutation = {
     __typename?: 'AuthLogin'
     success: boolean
     token?: string | null
+  } | null
+}
+
+export type OrganizationsQueryVariables = Exact<{
+  input?: InputMaybe<PageOrganizationInput>
+}>
+
+export type OrganizationsQuery = {
+  __typename?: 'Query'
+  pageOrganization?: {
+    __typename?: 'PageOrganization'
+    pageInfo: {
+      __typename?: 'pageInfo'
+      current: number
+      pageSize: number
+      total: number
+    }
+    organizations?: Array<{
+      __typename?: 'Organization'
+      createTime: string
+      updateTime: string
+      id: string
+      businessLicense: string
+      identityCardFrontImg: string
+      identityCardBackImg: string
+      logo: string
+      tags?: string | null
+      description?: string | null
+      name?: string | null
+      address?: string | null
+      longitude?: string | null
+      latitude?: string | null
+      tel?: string | null
+      frontImages?: Array<{
+        __typename?: 'OrgImage'
+        id: string
+        url: string
+        remark?: string | null
+      }> | null
+      roomImages?: Array<{
+        __typename?: 'OrgImage'
+        id: string
+        url: string
+        remark?: string | null
+      }> | null
+      otherImages?: Array<{
+        __typename?: 'OrgImage'
+        id: string
+        url: string
+        remark?: string | null
+      }> | null
+    }> | null
   } | null
 }
 
@@ -354,6 +536,119 @@ export type LoginMutationResult = Apollo.MutationResult<LoginMutation>
 export type LoginMutationOptions = Apollo.BaseMutationOptions<
   LoginMutation,
   LoginMutationVariables
+>
+export const OrganizationsDocument = gql`
+  query Organizations($input: PageOrganizationInput) {
+    pageOrganization(input: $input) {
+      pageInfo {
+        current
+        pageSize
+        total
+      }
+      organizations {
+        createTime
+        updateTime
+        id
+        businessLicense
+        identityCardFrontImg
+        identityCardBackImg
+        logo
+        tags
+        description
+        name
+        address
+        longitude
+        latitude
+        tel
+        frontImages {
+          id
+          url
+          remark
+        }
+        roomImages {
+          id
+          url
+          remark
+        }
+        otherImages {
+          id
+          url
+          remark
+        }
+      }
+    }
+  }
+`
+
+/**
+ * __useOrganizationsQuery__
+ *
+ * To run a query within a React component, call `useOrganizationsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useOrganizationsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useOrganizationsQuery({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useOrganizationsQuery(
+  baseOptions?: Apollo.QueryHookOptions<
+    OrganizationsQuery,
+    OrganizationsQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useQuery<OrganizationsQuery, OrganizationsQueryVariables>(
+    OrganizationsDocument,
+    options,
+  )
+}
+export function useOrganizationsLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    OrganizationsQuery,
+    OrganizationsQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useLazyQuery<OrganizationsQuery, OrganizationsQueryVariables>(
+    OrganizationsDocument,
+    options,
+  )
+}
+export function useOrganizationsSuspenseQuery(
+  baseOptions?:
+    | Apollo.SkipToken
+    | Apollo.SuspenseQueryHookOptions<
+        OrganizationsQuery,
+        OrganizationsQueryVariables
+      >,
+) {
+  const options =
+    baseOptions === Apollo.skipToken
+      ? baseOptions
+      : { ...defaultOptions, ...baseOptions }
+  return Apollo.useSuspenseQuery<
+    OrganizationsQuery,
+    OrganizationsQueryVariables
+  >(OrganizationsDocument, options)
+}
+export type OrganizationsQueryHookResult = ReturnType<
+  typeof useOrganizationsQuery
+>
+export type OrganizationsLazyQueryHookResult = ReturnType<
+  typeof useOrganizationsLazyQuery
+>
+export type OrganizationsSuspenseQueryHookResult = ReturnType<
+  typeof useOrganizationsSuspenseQuery
+>
+export type OrganizationsQueryResult = Apollo.QueryResult<
+  OrganizationsQuery,
+  OrganizationsQueryVariables
 >
 export const GetOssInfoDocument = gql`
   query GetOSSInfo {
