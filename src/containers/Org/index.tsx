@@ -3,6 +3,9 @@ import styles from './index.module.less'
 import { Button, Tag } from 'antd'
 import { PAGE_SIZE } from '@/const/pagination'
 import { useOrganizationsQuery } from '@/generated'
+import { useState } from 'react'
+
+import EditOrg from './components/EditOrg'
 
 function Org() {
   const { loading, data, refetch } = useOrganizationsQuery({
@@ -15,9 +18,33 @@ function Org() {
       },
     },
   })
+
+  const [showEdit, setShowEdit] = useState(false)
+  const [curId, setCurId] = useState('')
+
   const addOrg = () => {
     // 新增门店
+    setCurId('')
+    setShowEdit(true)
   }
+
+  const editOrg = (id: string) => {
+    // 编辑门店
+    setCurId(id)
+    setShowEdit(true)
+  }
+
+  const removeOrg = (id: string) => {
+    // 编辑门店
+    // setCurId(id)
+    console.log(id)
+  }
+
+  const onCloseDrawer = () => {
+    setShowEdit(false)
+    refetch()
+  }
+
   const dataSource = data?.pageOrganization?.organizations?.map((item) => {
     return {
       ...item,
@@ -30,7 +57,14 @@ function Org() {
           ))}
         </div>
       ),
-      actions: [<a key="edit">编辑</a>, <a key="delete">删除</a>],
+      actions: [
+        <a key="edit" onClick={() => editOrg(item.id)}>
+          编辑
+        </a>,
+        <a key="delete" onClick={() => removeOrg(item.id)}>
+          删除
+        </a>,
+      ],
       content: item.address,
     }
   })
@@ -85,6 +119,7 @@ function Org() {
         }}
         dataSource={dataSource || []}
       />
+      {showEdit && <EditOrg id={curId} onClose={onCloseDrawer} />}
     </PageContainer>
   )
 }

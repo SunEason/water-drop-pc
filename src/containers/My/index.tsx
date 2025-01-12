@@ -26,10 +26,12 @@ function My() {
         name: store.name,
         desc: store.desc,
         avatar: store.avatar
-          ? {
-              url: store.avatar,
-            }
-          : undefined,
+          ? [
+              {
+                url: store.avatar,
+              },
+            ]
+          : [],
       })
     }
   }, [store])
@@ -52,12 +54,12 @@ function My() {
               input: {
                 name: values.name,
                 desc: values.desc,
-                avatar: values.avatar?.url || '',
+                avatar: values.avatar[0]?.url || '',
               },
             },
           })
           if (res.data?.updateUserInfo) {
-            store.refreshHandler()
+            store.refreshHandler?.()
             message.success('提交成功')
             return
           }
@@ -81,7 +83,7 @@ function My() {
           </Col>
           <Col>
             <Form.Item name="avatar">
-              <OSSImageUpload />
+              <OSSImageUpload label="+ 更新头像" />
             </Form.Item>
           </Col>
         </Row>

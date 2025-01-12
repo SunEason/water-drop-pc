@@ -94,7 +94,7 @@ export type MutationUpdateUserInfoArgs = {
 }
 
 export type MutationOrganizationInput = {
-  address?: InputMaybe<Scalars['String']['input']>
+  address: Scalars['String']['input']
   businessLicense: Scalars['String']['input']
   description?: InputMaybe<Scalars['String']['input']>
   frontImages?: InputMaybe<Array<OrgImageInput>>
@@ -107,7 +107,7 @@ export type MutationOrganizationInput = {
   otherImages?: InputMaybe<Array<OrgImageInput>>
   roomImages?: InputMaybe<Array<OrgImageInput>>
   tags?: InputMaybe<Scalars['String']['input']>
-  tel?: InputMaybe<Scalars['String']['input']>
+  tel: Scalars['String']['input']
 }
 
 export type OssParams = {
@@ -136,7 +136,7 @@ export type OrgImageInput = {
 /**  Organization  */
 export type Organization = {
   __typename?: 'Organization'
-  address?: Maybe<Scalars['String']['output']>
+  address: Scalars['String']['output']
   businessLicense: Scalars['String']['output']
   createTime: Scalars['DateTime']['output']
   description?: Maybe<Scalars['String']['output']>
@@ -147,11 +147,11 @@ export type Organization = {
   latitude?: Maybe<Scalars['String']['output']>
   logo: Scalars['String']['output']
   longitude?: Maybe<Scalars['String']['output']>
-  name?: Maybe<Scalars['String']['output']>
+  name: Scalars['String']['output']
   otherImages?: Maybe<Array<OrgImage>>
   roomImages?: Maybe<Array<OrgImage>>
   tags?: Maybe<Scalars['String']['output']>
-  tel?: Maybe<Scalars['String']['output']>
+  tel: Scalars['String']['output']
   updateTime: Scalars['DateTime']['output']
 }
 
@@ -304,11 +304,11 @@ export type OrganizationsQuery = {
       logo: string
       tags?: string | null
       description?: string | null
-      name?: string | null
-      address?: string | null
+      name: string
+      address: string
       longitude?: string | null
       latitude?: string | null
-      tel?: string | null
+      tel: string
       frontImages?: Array<{
         __typename?: 'OrgImage'
         id: string
@@ -329,6 +329,145 @@ export type OrganizationsQuery = {
       }> | null
     }> | null
   } | null
+}
+
+export type GetOrganizationQueryVariables = Exact<{
+  id: Scalars['String']['input']
+}>
+
+export type GetOrganizationQuery = {
+  __typename?: 'Query'
+  getOrganization?: {
+    __typename?: 'Organization'
+    createTime: string
+    updateTime: string
+    id: string
+    businessLicense: string
+    identityCardFrontImg: string
+    identityCardBackImg: string
+    logo: string
+    tags?: string | null
+    description?: string | null
+    name: string
+    address: string
+    longitude?: string | null
+    latitude?: string | null
+    tel: string
+    frontImages?: Array<{
+      __typename?: 'OrgImage'
+      id: string
+      url: string
+      remark?: string | null
+    }> | null
+    roomImages?: Array<{
+      __typename?: 'OrgImage'
+      id: string
+      url: string
+      remark?: string | null
+    }> | null
+    otherImages?: Array<{
+      __typename?: 'OrgImage'
+      id: string
+      url: string
+      remark?: string | null
+    }> | null
+  } | null
+}
+
+export type UpdateOrganizationMutationVariables = Exact<{
+  id: Scalars['String']['input']
+  input: MutationOrganizationInput
+}>
+
+export type UpdateOrganizationMutation = {
+  __typename?: 'Mutation'
+  updateOrganization?: {
+    __typename?: 'Organization'
+    createTime: string
+    updateTime: string
+    id: string
+    businessLicense: string
+    identityCardFrontImg: string
+    identityCardBackImg: string
+    logo: string
+    tags?: string | null
+    description?: string | null
+    name: string
+    address: string
+    longitude?: string | null
+    latitude?: string | null
+    tel: string
+    frontImages?: Array<{
+      __typename?: 'OrgImage'
+      id: string
+      url: string
+      remark?: string | null
+    }> | null
+    roomImages?: Array<{
+      __typename?: 'OrgImage'
+      id: string
+      url: string
+      remark?: string | null
+    }> | null
+    otherImages?: Array<{
+      __typename?: 'OrgImage'
+      id: string
+      url: string
+      remark?: string | null
+    }> | null
+  } | null
+}
+
+export type CreateOrganizationMutationVariables = Exact<{
+  input: MutationOrganizationInput
+}>
+
+export type CreateOrganizationMutation = {
+  __typename?: 'Mutation'
+  createOrganization?: {
+    __typename?: 'Organization'
+    createTime: string
+    updateTime: string
+    id: string
+    businessLicense: string
+    identityCardFrontImg: string
+    identityCardBackImg: string
+    logo: string
+    tags?: string | null
+    description?: string | null
+    name: string
+    address: string
+    longitude?: string | null
+    latitude?: string | null
+    tel: string
+    frontImages?: Array<{
+      __typename?: 'OrgImage'
+      id: string
+      url: string
+      remark?: string | null
+    }> | null
+    roomImages?: Array<{
+      __typename?: 'OrgImage'
+      id: string
+      url: string
+      remark?: string | null
+    }> | null
+    otherImages?: Array<{
+      __typename?: 'OrgImage'
+      id: string
+      url: string
+      remark?: string | null
+    }> | null
+  } | null
+}
+
+export type RemoveOrganizationMutationVariables = Exact<{
+  id: Scalars['String']['input']
+}>
+
+export type RemoveOrganizationMutation = {
+  __typename?: 'Mutation'
+  removeOrganization?: boolean | null
 }
 
 export type GetOssInfoQueryVariables = Exact<{ [key: string]: never }>
@@ -649,6 +788,324 @@ export type OrganizationsSuspenseQueryHookResult = ReturnType<
 export type OrganizationsQueryResult = Apollo.QueryResult<
   OrganizationsQuery,
   OrganizationsQueryVariables
+>
+export const GetOrganizationDocument = gql`
+  query GetOrganization($id: String!) {
+    getOrganization(id: $id) {
+      createTime
+      updateTime
+      id
+      businessLicense
+      identityCardFrontImg
+      identityCardBackImg
+      logo
+      tags
+      description
+      name
+      address
+      longitude
+      latitude
+      tel
+      frontImages {
+        id
+        url
+        remark
+      }
+      roomImages {
+        id
+        url
+        remark
+      }
+      otherImages {
+        id
+        url
+        remark
+      }
+    }
+  }
+`
+
+/**
+ * __useGetOrganizationQuery__
+ *
+ * To run a query within a React component, call `useGetOrganizationQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetOrganizationQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetOrganizationQuery({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useGetOrganizationQuery(
+  baseOptions: Apollo.QueryHookOptions<
+    GetOrganizationQuery,
+    GetOrganizationQueryVariables
+  > &
+    (
+      | { variables: GetOrganizationQueryVariables; skip?: boolean }
+      | { skip: boolean }
+    ),
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useQuery<GetOrganizationQuery, GetOrganizationQueryVariables>(
+    GetOrganizationDocument,
+    options,
+  )
+}
+export function useGetOrganizationLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    GetOrganizationQuery,
+    GetOrganizationQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useLazyQuery<
+    GetOrganizationQuery,
+    GetOrganizationQueryVariables
+  >(GetOrganizationDocument, options)
+}
+export function useGetOrganizationSuspenseQuery(
+  baseOptions?:
+    | Apollo.SkipToken
+    | Apollo.SuspenseQueryHookOptions<
+        GetOrganizationQuery,
+        GetOrganizationQueryVariables
+      >,
+) {
+  const options =
+    baseOptions === Apollo.skipToken
+      ? baseOptions
+      : { ...defaultOptions, ...baseOptions }
+  return Apollo.useSuspenseQuery<
+    GetOrganizationQuery,
+    GetOrganizationQueryVariables
+  >(GetOrganizationDocument, options)
+}
+export type GetOrganizationQueryHookResult = ReturnType<
+  typeof useGetOrganizationQuery
+>
+export type GetOrganizationLazyQueryHookResult = ReturnType<
+  typeof useGetOrganizationLazyQuery
+>
+export type GetOrganizationSuspenseQueryHookResult = ReturnType<
+  typeof useGetOrganizationSuspenseQuery
+>
+export type GetOrganizationQueryResult = Apollo.QueryResult<
+  GetOrganizationQuery,
+  GetOrganizationQueryVariables
+>
+export const UpdateOrganizationDocument = gql`
+  mutation UpdateOrganization(
+    $id: String!
+    $input: MutationOrganizationInput!
+  ) {
+    updateOrganization(id: $id, input: $input) {
+      createTime
+      updateTime
+      id
+      businessLicense
+      identityCardFrontImg
+      identityCardBackImg
+      logo
+      tags
+      description
+      name
+      address
+      longitude
+      latitude
+      tel
+      frontImages {
+        id
+        url
+        remark
+      }
+      roomImages {
+        id
+        url
+        remark
+      }
+      otherImages {
+        id
+        url
+        remark
+      }
+    }
+  }
+`
+export type UpdateOrganizationMutationFn = Apollo.MutationFunction<
+  UpdateOrganizationMutation,
+  UpdateOrganizationMutationVariables
+>
+
+/**
+ * __useUpdateOrganizationMutation__
+ *
+ * To run a mutation, you first call `useUpdateOrganizationMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateOrganizationMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateOrganizationMutation, { data, loading, error }] = useUpdateOrganizationMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useUpdateOrganizationMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    UpdateOrganizationMutation,
+    UpdateOrganizationMutationVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useMutation<
+    UpdateOrganizationMutation,
+    UpdateOrganizationMutationVariables
+  >(UpdateOrganizationDocument, options)
+}
+export type UpdateOrganizationMutationHookResult = ReturnType<
+  typeof useUpdateOrganizationMutation
+>
+export type UpdateOrganizationMutationResult =
+  Apollo.MutationResult<UpdateOrganizationMutation>
+export type UpdateOrganizationMutationOptions = Apollo.BaseMutationOptions<
+  UpdateOrganizationMutation,
+  UpdateOrganizationMutationVariables
+>
+export const CreateOrganizationDocument = gql`
+  mutation CreateOrganization($input: MutationOrganizationInput!) {
+    createOrganization(input: $input) {
+      createTime
+      updateTime
+      id
+      businessLicense
+      identityCardFrontImg
+      identityCardBackImg
+      logo
+      tags
+      description
+      name
+      address
+      longitude
+      latitude
+      tel
+      frontImages {
+        id
+        url
+        remark
+      }
+      roomImages {
+        id
+        url
+        remark
+      }
+      otherImages {
+        id
+        url
+        remark
+      }
+    }
+  }
+`
+export type CreateOrganizationMutationFn = Apollo.MutationFunction<
+  CreateOrganizationMutation,
+  CreateOrganizationMutationVariables
+>
+
+/**
+ * __useCreateOrganizationMutation__
+ *
+ * To run a mutation, you first call `useCreateOrganizationMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateOrganizationMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createOrganizationMutation, { data, loading, error }] = useCreateOrganizationMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useCreateOrganizationMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    CreateOrganizationMutation,
+    CreateOrganizationMutationVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useMutation<
+    CreateOrganizationMutation,
+    CreateOrganizationMutationVariables
+  >(CreateOrganizationDocument, options)
+}
+export type CreateOrganizationMutationHookResult = ReturnType<
+  typeof useCreateOrganizationMutation
+>
+export type CreateOrganizationMutationResult =
+  Apollo.MutationResult<CreateOrganizationMutation>
+export type CreateOrganizationMutationOptions = Apollo.BaseMutationOptions<
+  CreateOrganizationMutation,
+  CreateOrganizationMutationVariables
+>
+export const RemoveOrganizationDocument = gql`
+  mutation RemoveOrganization($id: String!) {
+    removeOrganization(id: $id)
+  }
+`
+export type RemoveOrganizationMutationFn = Apollo.MutationFunction<
+  RemoveOrganizationMutation,
+  RemoveOrganizationMutationVariables
+>
+
+/**
+ * __useRemoveOrganizationMutation__
+ *
+ * To run a mutation, you first call `useRemoveOrganizationMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useRemoveOrganizationMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [removeOrganizationMutation, { data, loading, error }] = useRemoveOrganizationMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useRemoveOrganizationMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    RemoveOrganizationMutation,
+    RemoveOrganizationMutationVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useMutation<
+    RemoveOrganizationMutation,
+    RemoveOrganizationMutationVariables
+  >(RemoveOrganizationDocument, options)
+}
+export type RemoveOrganizationMutationHookResult = ReturnType<
+  typeof useRemoveOrganizationMutation
+>
+export type RemoveOrganizationMutationResult =
+  Apollo.MutationResult<RemoveOrganizationMutation>
+export type RemoveOrganizationMutationOptions = Apollo.BaseMutationOptions<
+  RemoveOrganizationMutation,
+  RemoveOrganizationMutationVariables
 >
 export const GetOssInfoDocument = gql`
   query GetOSSInfo {
