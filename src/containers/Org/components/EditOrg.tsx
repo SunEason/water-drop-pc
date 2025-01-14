@@ -1,8 +1,23 @@
-import { Button, Col, Divider, Drawer, Form, Input, Row, Spin } from 'antd'
+import {
+  Button,
+  Col,
+  Divider,
+  Drawer,
+  Form,
+  Input,
+  message,
+  Row,
+  Spin,
+  UploadFile,
+} from 'antd'
 import styles from './index.module.less'
 import UploadImage from '@/components/OSSImageUpload'
 import { Select } from 'antd/lib'
-import { useGetOrganizationQuery } from '@/generated'
+import {
+  useCreateOrganizationMutation,
+  useGetOrganizationQuery,
+  useUpdateOrganizationMutation,
+} from '@/generated'
 
 interface IProps {
   id: string
@@ -12,7 +27,11 @@ interface IProps {
 function EditOrg({ id, onClose }: IProps) {
   const [form] = Form.useForm()
 
+  const [edit, { loading: editLoading }] = useUpdateOrganizationMutation()
+  const [create, { loading: createLoading }] = useCreateOrganizationMutation()
+
   const { data, loading: queryLoading } = useGetOrganizationQuery({
+    fetchPolicy: 'no-cache', // 禁用缓存
     variables: {
       id,
     },
@@ -39,19 +58,42 @@ function EditOrg({ id, onClose }: IProps) {
 
   const onFinish = async () => {
     const values = await form.validateFields()
-    if (values) {
-      console.log(values)
+    if (!values) return
+    let submit
+    if (id) {
+      submit = edit
+    } else {
+      submit = create
     }
+    const res = await submit({
+      variables: {
+        id: id,
+        input: {
+          ...values,
+          tags: values.tags?.join(','),
+          logo: values.logo?.[0]?.url,
+          businessLicense: values.businessLicense?.[0]?.url,
+          identityCardFrontImg: values.identityCardFrontImg?.[0]?.url,
+          identityCardBackImg: values.identityCardBackImg?.[0]?.url,
+          frontImages: values.frontImages?.map((item: UploadFile) => ({
+            url: item.url,
+          })),
+          roomImages: values.roomImages?.map((item: UploadFile) => ({
+            url: item.url,
+          })),
+          otherImages: values.otherImages?.map((item: UploadFile) => ({
+            url: item.url,
+          })),
+        },
+      },
+    })
+    if (res.errors) return message.error('编辑失败')
+    message.success('编辑成功')
   }
 
-  const editLoading = false
-
-  // useEffect(() => {
-  //   console.log(id, 'edit org')
-  // })
   return (
     <Drawer
-      title="编辑门店"
+      title={id ? '编辑门店' : '新增门店'}
       width="70vw"
       onClose={onClose}
       open
@@ -61,7 +103,11 @@ function EditOrg({ id, onClose }: IProps) {
         },
       }}
       footer={
-        <Button type="primary" onClick={onFinish} loading={editLoading}>
+        <Button
+          type="primary"
+          onClick={onFinish}
+          loading={editLoading || createLoading}
+        >
           保存
         </Button>
       }
@@ -191,7 +237,11 @@ function EditOrg({ id, onClose }: IProps) {
         </Form.Item>
         <Divider>门店其他图：图片长宽要求比例2:1，最多上传5张</Divider>
         <Form.Item name="otherImages">
-          <UploadImage maxCount={5} imgCropAspect={2 / 1} />
+          <UploadImage
+            maxCount={5}
+            onChange={(files) => console.log(files)}
+            imgCropAspect={2 / 1}
+          />
         </Form.Item>
       </Form>
     </Drawer>
