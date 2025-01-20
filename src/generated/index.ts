@@ -40,6 +40,7 @@ export type AuthLogin = {
 
 export type Mutation = {
   __typename?: 'Mutation'
+  commitOrganization?: Maybe<Organization>
   createOrganization?: Maybe<Organization>
   createUser?: Maybe<User>
   /** 登录 */
@@ -51,6 +52,11 @@ export type Mutation = {
   updateOrganization?: Maybe<Organization>
   updateUser?: Maybe<User>
   updateUserInfo?: Maybe<User>
+}
+
+export type MutationCommitOrganizationArgs = {
+  id?: InputMaybe<Scalars['String']['input']>
+  input: MutationOrganizationInput
 }
 
 export type MutationCreateOrganizationArgs = {
@@ -381,41 +387,7 @@ export type UpdateOrganizationMutationVariables = Exact<{
 
 export type UpdateOrganizationMutation = {
   __typename?: 'Mutation'
-  updateOrganization?: {
-    __typename?: 'Organization'
-    createTime: string
-    updateTime: string
-    id: string
-    businessLicense: string
-    identityCardFrontImg: string
-    identityCardBackImg: string
-    logo: string
-    tags?: string | null
-    description?: string | null
-    name: string
-    address: string
-    longitude?: string | null
-    latitude?: string | null
-    tel: string
-    frontImages?: Array<{
-      __typename?: 'OrgImage'
-      id: string
-      url: string
-      remark?: string | null
-    }> | null
-    roomImages?: Array<{
-      __typename?: 'OrgImage'
-      id: string
-      url: string
-      remark?: string | null
-    }> | null
-    otherImages?: Array<{
-      __typename?: 'OrgImage'
-      id: string
-      url: string
-      remark?: string | null
-    }> | null
-  } | null
+  updateOrganization?: { __typename?: 'Organization'; id: string } | null
 }
 
 export type CreateOrganizationMutationVariables = Exact<{
@@ -424,41 +396,7 @@ export type CreateOrganizationMutationVariables = Exact<{
 
 export type CreateOrganizationMutation = {
   __typename?: 'Mutation'
-  createOrganization?: {
-    __typename?: 'Organization'
-    createTime: string
-    updateTime: string
-    id: string
-    businessLicense: string
-    identityCardFrontImg: string
-    identityCardBackImg: string
-    logo: string
-    tags?: string | null
-    description?: string | null
-    name: string
-    address: string
-    longitude?: string | null
-    latitude?: string | null
-    tel: string
-    frontImages?: Array<{
-      __typename?: 'OrgImage'
-      id: string
-      url: string
-      remark?: string | null
-    }> | null
-    roomImages?: Array<{
-      __typename?: 'OrgImage'
-      id: string
-      url: string
-      remark?: string | null
-    }> | null
-    otherImages?: Array<{
-      __typename?: 'OrgImage'
-      id: string
-      url: string
-      remark?: string | null
-    }> | null
-  } | null
+  createOrganization?: { __typename?: 'Organization'; id: string } | null
 }
 
 export type RemoveOrganizationMutationVariables = Exact<{
@@ -468,6 +406,16 @@ export type RemoveOrganizationMutationVariables = Exact<{
 export type RemoveOrganizationMutation = {
   __typename?: 'Mutation'
   removeOrganization?: boolean | null
+}
+
+export type CommitOrganizationMutationVariables = Exact<{
+  input: MutationOrganizationInput
+  id?: InputMaybe<Scalars['String']['input']>
+}>
+
+export type CommitOrganizationMutation = {
+  __typename?: 'Mutation'
+  commitOrganization?: { __typename?: 'Organization'; id: string } | null
 }
 
 export type GetOssInfoQueryVariables = Exact<{ [key: string]: never }>
@@ -905,35 +853,7 @@ export const UpdateOrganizationDocument = gql`
     $input: MutationOrganizationInput!
   ) {
     updateOrganization(id: $id, input: $input) {
-      createTime
-      updateTime
       id
-      businessLicense
-      identityCardFrontImg
-      identityCardBackImg
-      logo
-      tags
-      description
-      name
-      address
-      longitude
-      latitude
-      tel
-      frontImages {
-        id
-        url
-        remark
-      }
-      roomImages {
-        id
-        url
-        remark
-      }
-      otherImages {
-        id
-        url
-        remark
-      }
     }
   }
 `
@@ -984,35 +904,7 @@ export type UpdateOrganizationMutationOptions = Apollo.BaseMutationOptions<
 export const CreateOrganizationDocument = gql`
   mutation CreateOrganization($input: MutationOrganizationInput!) {
     createOrganization(input: $input) {
-      createTime
-      updateTime
       id
-      businessLicense
-      identityCardFrontImg
-      identityCardBackImg
-      logo
-      tags
-      description
-      name
-      address
-      longitude
-      latitude
-      tel
-      frontImages {
-        id
-        url
-        remark
-      }
-      roomImages {
-        id
-        url
-        remark
-      }
-      otherImages {
-        id
-        url
-        remark
-      }
     }
   }
 `
@@ -1106,6 +998,57 @@ export type RemoveOrganizationMutationResult =
 export type RemoveOrganizationMutationOptions = Apollo.BaseMutationOptions<
   RemoveOrganizationMutation,
   RemoveOrganizationMutationVariables
+>
+export const CommitOrganizationDocument = gql`
+  mutation CommitOrganization($input: MutationOrganizationInput!, $id: String) {
+    commitOrganization(input: $input, id: $id) {
+      id
+    }
+  }
+`
+export type CommitOrganizationMutationFn = Apollo.MutationFunction<
+  CommitOrganizationMutation,
+  CommitOrganizationMutationVariables
+>
+
+/**
+ * __useCommitOrganizationMutation__
+ *
+ * To run a mutation, you first call `useCommitOrganizationMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCommitOrganizationMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [commitOrganizationMutation, { data, loading, error }] = useCommitOrganizationMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useCommitOrganizationMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    CommitOrganizationMutation,
+    CommitOrganizationMutationVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useMutation<
+    CommitOrganizationMutation,
+    CommitOrganizationMutationVariables
+  >(CommitOrganizationDocument, options)
+}
+export type CommitOrganizationMutationHookResult = ReturnType<
+  typeof useCommitOrganizationMutation
+>
+export type CommitOrganizationMutationResult =
+  Apollo.MutationResult<CommitOrganizationMutation>
+export type CommitOrganizationMutationOptions = Apollo.BaseMutationOptions<
+  CommitOrganizationMutation,
+  CommitOrganizationMutationVariables
 >
 export const GetOssInfoDocument = gql`
   query GetOSSInfo {

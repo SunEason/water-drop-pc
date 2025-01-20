@@ -1,3 +1,4 @@
+import { useMemo } from 'react'
 import {
   Button,
   Col,
@@ -10,13 +11,12 @@ import {
   Spin,
   UploadFile,
 } from 'antd'
+import { Select } from 'antd/lib'
 import styles from './index.module.less'
 import UploadImage from '@/components/OSSImageUpload'
-import { Select } from 'antd/lib'
 import {
-  useCreateOrganizationMutation,
+  useCommitOrganizationMutation,
   useGetOrganizationQuery,
-  useUpdateOrganizationMutation,
 } from '@/generated'
 
 interface IProps {
@@ -25,19 +25,24 @@ interface IProps {
 }
 
 function EditOrg({ id, onClose }: IProps) {
+  const title = useMemo(() => {
+    return id ? '编辑' : '新增'
+  }, [id])
+
   const [form] = Form.useForm()
 
-  const [edit, { loading: editLoading }] = useUpdateOrganizationMutation()
-  const [create, { loading: createLoading }] = useCreateOrganizationMutation()
+  const [submit, { loading: submitting }] = useCommitOrganizationMutation({
+    fetchPolicy: 'no-cache', // 禁用缓存
+  })
 
-  const { data, loading: queryLoading } = useGetOrganizationQuery({
+  const { data, loading: querying } = useGetOrganizationQuery({
     fetchPolicy: 'no-cache', // 禁用缓存
     variables: {
       id,
     },
   })
 
-  if (queryLoading) return <Spin />
+  if (querying) return <Spin />
 
   const init = () => {
     const org = data?.getOrganization
@@ -59,15 +64,9 @@ function EditOrg({ id, onClose }: IProps) {
   const onFinish = async () => {
     const values = await form.validateFields()
     if (!values) return
-    let submit
-    if (id) {
-      submit = edit
-    } else {
-      submit = create
-    }
     const res = await submit({
       variables: {
-        id: id,
+        id: id ? id : undefined,
         input: {
           ...values,
           tags: values.tags?.join(','),
@@ -87,13 +86,17 @@ function EditOrg({ id, onClose }: IProps) {
         },
       },
     })
-    if (res.errors) return message.error('编辑失败')
-    message.success('编辑成功')
+    if (res.errors) {
+      message.error(`${title}失败`)
+      console.error(res.errors)
+      return
+    }
+    message.success(`${title}成功`)
   }
 
   return (
     <Drawer
-      title={id ? '编辑门店' : '新增门店'}
+      title={`${title}门店`}
       width="70vw"
       onClose={onClose}
       open
@@ -103,11 +106,7 @@ function EditOrg({ id, onClose }: IProps) {
         },
       }}
       footer={
-        <Button
-          type="primary"
-          onClick={onFinish}
-          loading={editLoading || createLoading}
-        >
+        <Button type="primary" onClick={onFinish} loading={submitting}>
           保存
         </Button>
       }

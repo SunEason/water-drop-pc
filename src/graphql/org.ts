@@ -85,35 +85,7 @@ export const updateOrganization = gql`
     $input: MutationOrganizationInput!
   ) {
     updateOrganization(id: $id, input: $input) {
-      createTime
-      updateTime
       id
-      businessLicense
-      identityCardFrontImg
-      identityCardBackImg
-      logo
-      tags
-      description
-      name
-      address
-      longitude
-      latitude
-      tel
-      frontImages {
-        id
-        url
-        remark
-      }
-      roomImages {
-        id
-        url
-        remark
-      }
-      otherImages {
-        id
-        url
-        remark
-      }
     }
   }
 `
@@ -121,35 +93,7 @@ export const updateOrganization = gql`
 export const createOrganization = gql`
   mutation CreateOrganization($input: MutationOrganizationInput!) {
     createOrganization(input: $input) {
-      createTime
-      updateTime
       id
-      businessLicense
-      identityCardFrontImg
-      identityCardBackImg
-      logo
-      tags
-      description
-      name
-      address
-      longitude
-      latitude
-      tel
-      frontImages {
-        id
-        url
-        remark
-      }
-      roomImages {
-        id
-        url
-        remark
-      }
-      otherImages {
-        id
-        url
-        remark
-      }
     }
   }
 `
@@ -157,5 +101,13 @@ export const createOrganization = gql`
 export const removeOrganization = gql`
   mutation RemoveOrganization($id: String!) {
     removeOrganization(id: $id)
+  }
+`
+
+export const commitOrganization = gql`
+  mutation CommitOrganization($input: MutationOrganizationInput!, $id: String) {
+    commitOrganization(input: $input, id: $id) {
+      id
+    }
   }
 `
