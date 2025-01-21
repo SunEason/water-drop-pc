@@ -6,7 +6,7 @@ import { useUserContext } from '@/store/user'
 import { ROUTE_KEY, routes } from '@/route/menus'
 import { Dropdown } from 'antd'
 import { HomeOutlined, LogoutOutlined } from '@ant-design/icons'
-import { useRouter } from '@/hooks'
+import { useRouter } from '@/hooks/router'
 
 const menuItemRender = (props: MenuDataItem, defaultDom: React.ReactNode) => {
   return <Link to={props.path || '/'}>{defaultDom}</Link>
