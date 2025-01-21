@@ -4,9 +4,10 @@ import style from './index.module.less'
 import { Link, useNavigate, useOutlet } from 'react-router-dom'
 import { useUserContext } from '@/store/user'
 import { ROUTE_KEY, routes } from '@/route/menus'
-import { Dropdown } from 'antd'
-import { HomeOutlined, LogoutOutlined } from '@ant-design/icons'
+import { Dropdown, Tooltip } from 'antd'
+import { HomeOutlined, LogoutOutlined, ShopOutlined } from '@ant-design/icons'
 import { useRouter } from '@/hooks/router'
+import OrgSelect from '../OrgSelect'
 
 const menuItemRender = (props: MenuDataItem, defaultDom: React.ReactNode) => {
   return <Link to={props.path || '/'}>{defaultDom}</Link>
@@ -22,6 +23,10 @@ function Layout() {
     sessionStorage.setItem(import.meta.env.VITE_AUTH_TOKEN, '')
     localStorage.setItem(import.meta.env.VITE_AUTH_TOKEN, '')
     nav('/login')
+  }
+
+  const gotoOrg = () => {
+    router.go(ROUTE_KEY.ORG)
   }
 
   return (
@@ -72,6 +77,14 @@ function Layout() {
         path: '/',
         routes: routes,
       }}
+      actionsRender={() => [
+        <div key={1}>
+          <OrgSelect />
+        </div>,
+        <Tooltip key={2} title="门店管理">
+          <ShopOutlined onClick={gotoOrg} />
+        </Tooltip>,
+      ]}
       menuItemRender={menuItemRender}
     >
       {outlet}

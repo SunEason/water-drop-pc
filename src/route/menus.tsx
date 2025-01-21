@@ -23,7 +23,8 @@ export const ROUTE_CONFIG: Record<string, IRoute> = {
   },
   [ROUTE_KEY.ORG]: {
     path: 'org',
-    name: '组织信息',
+    name: '门店信息',
+    hideInMenu: true,
     icon: <HomeOutlined />,
   },
   [ROUTE_KEY.MY]: {
