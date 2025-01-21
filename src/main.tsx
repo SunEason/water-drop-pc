@@ -8,9 +8,9 @@ import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import '@/index.css'
 import { routes } from '@/route/menus'
 import UserInfo from '@/components/UserInfo.tsx'
-import Login from '@/containers/Login'
-import Layout from '@/containers/Layout'
+import Layout from '@/components/Layout'
 import { ROUTE_COMPONENT } from './route'
+import Login from '@/containers/Login'
 
 createRoot(document.getElementById('root')!).render(
   <ApolloProvider client={client}>
