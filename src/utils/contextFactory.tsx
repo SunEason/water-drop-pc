@@ -21,7 +21,13 @@ function getCxtProvider(
       () => ({
         key,
         store,
-        setStore,
+        // 增量更新,
+        setStore: (payload = {}) => {
+          setStore({
+            ...store,
+            ...payload,
+          })
+        },
       }),
       [store],
     )

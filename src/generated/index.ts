@@ -337,6 +337,22 @@ export type OrganizationsQuery = {
   } | null
 }
 
+export type SelectOrganizationsQueryVariables = Exact<{
+  input?: InputMaybe<PageOrganizationInput>
+}>
+
+export type SelectOrganizationsQuery = {
+  __typename?: 'Query'
+  pageOrganization?: {
+    __typename?: 'PageOrganization'
+    organizations?: Array<{
+      __typename?: 'Organization'
+      id: string
+      name: string
+    }> | null
+  } | null
+}
+
 export type GetOrganizationQueryVariables = Exact<{
   id: Scalars['String']['input']
 }>
@@ -736,6 +752,87 @@ export type OrganizationsSuspenseQueryHookResult = ReturnType<
 export type OrganizationsQueryResult = Apollo.QueryResult<
   OrganizationsQuery,
   OrganizationsQueryVariables
+>
+export const SelectOrganizationsDocument = gql`
+  query selectOrganizations($input: PageOrganizationInput) {
+    pageOrganization(input: $input) {
+      organizations {
+        id
+        name
+      }
+    }
+  }
+`
+
+/**
+ * __useSelectOrganizationsQuery__
+ *
+ * To run a query within a React component, call `useSelectOrganizationsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useSelectOrganizationsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useSelectOrganizationsQuery({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useSelectOrganizationsQuery(
+  baseOptions?: Apollo.QueryHookOptions<
+    SelectOrganizationsQuery,
+    SelectOrganizationsQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useQuery<
+    SelectOrganizationsQuery,
+    SelectOrganizationsQueryVariables
+  >(SelectOrganizationsDocument, options)
+}
+export function useSelectOrganizationsLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    SelectOrganizationsQuery,
+    SelectOrganizationsQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useLazyQuery<
+    SelectOrganizationsQuery,
+    SelectOrganizationsQueryVariables
+  >(SelectOrganizationsDocument, options)
+}
+export function useSelectOrganizationsSuspenseQuery(
+  baseOptions?:
+    | Apollo.SkipToken
+    | Apollo.SuspenseQueryHookOptions<
+        SelectOrganizationsQuery,
+        SelectOrganizationsQueryVariables
+      >,
+) {
+  const options =
+    baseOptions === Apollo.skipToken
+      ? baseOptions
+      : { ...defaultOptions, ...baseOptions }
+  return Apollo.useSuspenseQuery<
+    SelectOrganizationsQuery,
+    SelectOrganizationsQueryVariables
+  >(SelectOrganizationsDocument, options)
+}
+export type SelectOrganizationsQueryHookResult = ReturnType<
+  typeof useSelectOrganizationsQuery
+>
+export type SelectOrganizationsLazyQueryHookResult = ReturnType<
+  typeof useSelectOrganizationsLazyQuery
+>
+export type SelectOrganizationsSuspenseQueryHookResult = ReturnType<
+  typeof useSelectOrganizationsSuspenseQuery
+>
+export type SelectOrganizationsQueryResult = Apollo.QueryResult<
+  SelectOrganizationsQuery,
+  SelectOrganizationsQueryVariables
 >
 export const GetOrganizationDocument = gql`
   query GetOrganization($id: String!) {

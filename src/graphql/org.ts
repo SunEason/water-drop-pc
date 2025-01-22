@@ -43,6 +43,17 @@ export const pageOrganization = gql`
   }
 `
 
+export const selectOrganizations = gql`
+  query selectOrganizations($input: PageOrganizationInput) {
+    pageOrganization(input: $input) {
+      organizations {
+        id
+        name
+      }
+    }
+  }
+`
+
 export const organization = gql`
   query GetOrganization($id: String!) {
     getOrganization(id: $id) {

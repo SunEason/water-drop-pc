@@ -17,6 +17,7 @@
     "antd": "^5.21.6",
     "antd-img-crop": "^4.23.0",
     "graphql": "^16.9.0",
+    "lodash": "^4.17.21",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-router-dom": "^6.28.0"
@@ -29,6 +30,7 @@
     "@graphql-codegen/client-preset": "4.4.0",
     "@graphql-codegen/typescript-react-apollo": "^4.3.2",
     "@nabla/vite-plugin-eslint": "^2.0.4",
+    "@types/lodash": "^4.17.14",
     "@types/node": "^22.10.0",
     "@types/react": "^18.3.10",
     "@types/react-dom": "^18.3.0",
