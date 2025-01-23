@@ -1,10 +1,11 @@
 import { useGetUserInfoQuery } from '@/generated'
+import { IUser } from '@/types'
 import { connectFactory, useStore } from '@/utils/contextFactory'
 import { useLocation, useNavigate } from 'react-router-dom'
 
 const key = 'userInfo' as const
 const defaultValue = {}
-export const useUserContext = () => useStore(key)
+export const useUserContext = () => useStore<IUser>(key)
 
 export const connect = connectFactory(key, defaultValue)
 

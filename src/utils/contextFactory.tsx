@@ -2,18 +2,16 @@
 import { createContext, useContext, useMemo, useState } from 'react'
 import { IPropsChild } from '@/types'
 
-type StoreItem = Record<string, any>
-
-interface IStore {
+interface IStore<T> {
   key: string
-  store: StoreItem
-  setStore: (payload: StoreItem) => void
+  store: T
+  setStore: (payload: Partial<T>) => void
 }
 
-function getCxtProvider(
+function getCxtProvider<T>(
   key: string,
-  defaultValue: StoreItem,
-  AppContext: React.Context<IStore>,
+  defaultValue: T,
+  AppContext: React.Context<IStore<T>>,
 ) {
   return ({ children }: IPropsChild) => {
     const [store, setStore] = useState(defaultValue)
@@ -37,11 +35,11 @@ function getCxtProvider(
 
 const cxtCache = new Map<string, Cxt>()
 
-class Cxt {
-  defaultStore: IStore
-  AppContext: React.Context<IStore>
+class Cxt<T = any> {
+  defaultStore: IStore<T>
+  AppContext: React.Context<IStore<T>>
   Provider: ({ children }: IPropsChild) => JSX.Element
-  constructor(key: string, defaultValue: StoreItem) {
+  constructor(key: string, defaultValue: T) {
     this.defaultStore = {
       key,
       store: defaultValue,
@@ -53,8 +51,8 @@ class Cxt {
   }
 }
 
-export function useStore(key: string) {
-  let cxt = cxtCache.get(key)!
+export function useStore<T>(key: string) {
+  let cxt = cxtCache.get(key) as Cxt<T>
   const app = useContext(cxt.AppContext)
   return {
     store: app.store,
@@ -62,7 +60,7 @@ export function useStore(key: string) {
   }
 }
 
-export function connectFactory(key: string, defaultValue: StoreItem) {
+export function connectFactory<T>(key: string, defaultValue: T) {
   const cxt = cxtCache.get(key)
   let CurCxt: Cxt
   if (cxt) {
