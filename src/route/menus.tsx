@@ -1,4 +1,4 @@
-import { HomeOutlined } from '@ant-design/icons'
+import { HomeOutlined, PicRightOutlined } from '@ant-design/icons'
 
 interface IRoute {
   path: string
@@ -13,6 +13,7 @@ export const ROUTE_KEY = {
   MY: 'my',
   ORG: 'org',
   ORG_EMPTY: 'org_empty',
+  COURSE: 'course',
 }
 export type RouteKey = keyof typeof ROUTE_KEY
 
@@ -41,6 +42,11 @@ export const ROUTE_CONFIG: Record<string, IRoute> = {
     path: '*',
     hideInMenu: true,
     name: '404',
+  },
+  [ROUTE_KEY.COURSE]: {
+    path: 'course',
+    name: '课程信息',
+    icon: <PicRightOutlined />,
   },
 }
 

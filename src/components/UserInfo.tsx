@@ -6,7 +6,7 @@ function UserInfo({ children }: IPropsChild) {
   const { loading } = useGetUserInfo()
   return (
     <Spin spinning={loading}>
-      <div style={{ height: '100vh' }}>{children}</div>
+      <div>{children}</div>
     </Spin>
   )
 }

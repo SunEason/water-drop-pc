@@ -38,25 +38,54 @@ export type AuthLogin = {
   token?: Maybe<Scalars['String']['output']>
 }
 
+export type Course = {
+  __typename?: 'Course'
+  baseAbility: Scalars['String']['output']
+  createTime: Scalars['DateTime']['output']
+  deletedAt?: Maybe<Scalars['DateTime']['output']>
+  desc?: Maybe<Scalars['String']['output']>
+  group: Scalars['String']['output']
+  id: Scalars['String']['output']
+  limitNumber: Scalars['Int']['output']
+  name: Scalars['String']['output']
+  otherInfo?: Maybe<Scalars['String']['output']>
+  refundInfo?: Maybe<Scalars['String']['output']>
+  reserveInfo?: Maybe<Scalars['String']['output']>
+  updateTime: Scalars['DateTime']['output']
+}
+
 export type Mutation = {
   __typename?: 'Mutation'
+  commitCourse?: Maybe<Course>
   commitOrganization?: Maybe<Organization>
+  createCourse?: Maybe<Course>
   createOrganization?: Maybe<Organization>
   createUser?: Maybe<User>
   /** 登录 */
   login?: Maybe<AuthLogin>
+  removeCourse?: Maybe<Scalars['Boolean']['output']>
   removeOrganization?: Maybe<Scalars['Boolean']['output']>
   removeUser?: Maybe<User>
   /** 发送验证码 */
   sendMessage?: Maybe<Scalars['Boolean']['output']>
+  updateCourse?: Maybe<Course>
   updateOrganization?: Maybe<Organization>
   updateUser?: Maybe<User>
   updateUserInfo?: Maybe<User>
 }
 
+export type MutationCommitCourseArgs = {
+  id?: InputMaybe<Scalars['String']['input']>
+  input: MutationCourseInput
+}
+
 export type MutationCommitOrganizationArgs = {
   id?: InputMaybe<Scalars['String']['input']>
   input: MutationOrganizationInput
+}
+
+export type MutationCreateCourseArgs = {
+  input: MutationCourseInput
 }
 
 export type MutationCreateOrganizationArgs = {
@@ -72,6 +101,10 @@ export type MutationLoginArgs = {
   tel: Scalars['String']['input']
 }
 
+export type MutationRemoveCourseArgs = {
+  id: Scalars['String']['input']
+}
+
 export type MutationRemoveOrganizationArgs = {
   id: Scalars['String']['input']
 }
@@ -82,6 +115,11 @@ export type MutationRemoveUserArgs = {
 
 export type MutationSendMessageArgs = {
   tel: Scalars['String']['input']
+}
+
+export type MutationUpdateCourseArgs = {
+  id: Scalars['String']['input']
+  input: MutationCourseInput
 }
 
 export type MutationUpdateOrganizationArgs = {
@@ -97,6 +135,17 @@ export type MutationUpdateUserArgs = {
 export type MutationUpdateUserInfoArgs = {
   id: Scalars['String']['input']
   input: UserUpdateInput
+}
+
+export type MutationCourseInput = {
+  baseAbility: Scalars['String']['input']
+  desc?: InputMaybe<Scalars['String']['input']>
+  group: Scalars['String']['input']
+  limitNumber: Scalars['Int']['input']
+  name: Scalars['String']['input']
+  otherInfo?: InputMaybe<Scalars['String']['input']>
+  refundInfo?: InputMaybe<Scalars['String']['input']>
+  reserveInfo?: InputMaybe<Scalars['String']['input']>
 }
 
 export type MutationOrganizationInput = {
@@ -161,6 +210,17 @@ export type Organization = {
   updateTime: Scalars['DateTime']['output']
 }
 
+export type PageCourse = {
+  __typename?: 'PageCourse'
+  courses?: Maybe<Array<Course>>
+  pageInfo: PageInfo
+}
+
+export type PageCourseInput = {
+  name?: InputMaybe<Scalars['String']['input']>
+  pageInput: PageInput
+}
+
 export type PageOrganization = {
   __typename?: 'PageOrganization'
   organizations?: Maybe<Array<Organization>>
@@ -175,16 +235,26 @@ export type PageOrganizationInput = {
 export type Query = {
   __typename?: 'Query'
   OSSInfo?: Maybe<OssParams>
+  getCourse?: Maybe<Course>
   getOrganization?: Maybe<Organization>
   getUserInfo?: Maybe<User>
+  pageCourse?: Maybe<PageCourse>
   pageOrganization?: Maybe<PageOrganization>
   students?: Maybe<Students>
   user?: Maybe<User>
   users?: Maybe<Array<User>>
 }
 
+export type QueryGetCourseArgs = {
+  id: Scalars['String']['input']
+}
+
 export type QueryGetOrganizationArgs = {
   id: Scalars['String']['input']
+}
+
+export type QueryPageCourseArgs = {
+  input?: InputMaybe<PageCourseInput>
 }
 
 export type QueryPageOrganizationArgs = {
@@ -282,6 +352,38 @@ export type LoginMutation = {
     __typename?: 'AuthLogin'
     success: boolean
     token?: string | null
+  } | null
+}
+
+export type PageCourseQueryVariables = Exact<{
+  input?: InputMaybe<PageCourseInput>
+}>
+
+export type PageCourseQuery = {
+  __typename?: 'Query'
+  pageCourse?: {
+    __typename?: 'PageCourse'
+    pageInfo: {
+      __typename?: 'pageInfo'
+      current: number
+      pageSize: number
+      total: number
+    }
+    courses?: Array<{
+      __typename?: 'Course'
+      id: string
+      createTime: string
+      updateTime: string
+      deletedAt?: string | null
+      name: string
+      group: string
+      baseAbility: string
+      limitNumber: number
+      desc?: string | null
+      reserveInfo?: string | null
+      refundInfo?: string | null
+      otherInfo?: string | null
+    }> | null
   } | null
 }
 
@@ -639,6 +741,100 @@ export type LoginMutationResult = Apollo.MutationResult<LoginMutation>
 export type LoginMutationOptions = Apollo.BaseMutationOptions<
   LoginMutation,
   LoginMutationVariables
+>
+export const PageCourseDocument = gql`
+  query PageCourse($input: PageCourseInput) {
+    pageCourse(input: $input) {
+      pageInfo {
+        current
+        pageSize
+        total
+      }
+      courses {
+        id
+        createTime
+        updateTime
+        deletedAt
+        name
+        group
+        baseAbility
+        limitNumber
+        desc
+        reserveInfo
+        refundInfo
+        otherInfo
+      }
+    }
+  }
+`
+
+/**
+ * __usePageCourseQuery__
+ *
+ * To run a query within a React component, call `usePageCourseQuery` and pass it any options that fit your needs.
+ * When your component renders, `usePageCourseQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = usePageCourseQuery({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function usePageCourseQuery(
+  baseOptions?: Apollo.QueryHookOptions<
+    PageCourseQuery,
+    PageCourseQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useQuery<PageCourseQuery, PageCourseQueryVariables>(
+    PageCourseDocument,
+    options,
+  )
+}
+export function usePageCourseLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    PageCourseQuery,
+    PageCourseQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useLazyQuery<PageCourseQuery, PageCourseQueryVariables>(
+    PageCourseDocument,
+    options,
+  )
+}
+export function usePageCourseSuspenseQuery(
+  baseOptions?:
+    | Apollo.SkipToken
+    | Apollo.SuspenseQueryHookOptions<
+        PageCourseQuery,
+        PageCourseQueryVariables
+      >,
+) {
+  const options =
+    baseOptions === Apollo.skipToken
+      ? baseOptions
+      : { ...defaultOptions, ...baseOptions }
+  return Apollo.useSuspenseQuery<PageCourseQuery, PageCourseQueryVariables>(
+    PageCourseDocument,
+    options,
+  )
+}
+export type PageCourseQueryHookResult = ReturnType<typeof usePageCourseQuery>
+export type PageCourseLazyQueryHookResult = ReturnType<
+  typeof usePageCourseLazyQuery
+>
+export type PageCourseSuspenseQueryHookResult = ReturnType<
+  typeof usePageCourseSuspenseQuery
+>
+export type PageCourseQueryResult = Apollo.QueryResult<
+  PageCourseQuery,
+  PageCourseQueryVariables
 >
 export const OrganizationsDocument = gql`
   query Organizations($input: PageOrganizationInput) {
