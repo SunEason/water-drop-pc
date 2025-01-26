@@ -1,21 +1,12 @@
 import { PAGE_SIZE } from '@/const/pagination'
-import { usePageCourseQuery } from '@/generated'
+import { usePageCourseLazyQuery } from '@/generated'
 import type { Course as ICourse } from '@/generated'
 import { PageContainer, ProTable } from '@ant-design/pro-components'
 import { columns } from './contents'
 import { message } from 'antd'
 
 function Course() {
-  const { data, loading, refetch } = usePageCourseQuery({
-    variables: {
-      input: {
-        pageInput: {
-          pageSize: 10,
-          current: 1,
-        },
-      },
-    },
-  })
+  const [getCourses, { loading, error }] = usePageCourseLazyQuery()
 
   return (
     <PageContainer
@@ -25,30 +16,32 @@ function Course() {
       }}
     >
       <ProTable<ICourse>
-        dataSource={data?.pageCourse?.courses || []}
+        rowKey="id"
         columns={columns}
         pagination={{
           defaultPageSize: PAGE_SIZE,
           showSizeChanger: false,
-          total: data?.pageCourse?.pageInfo?.total || 0,
         }}
         request={async (params) => {
-          const { data, errors } = await refetch({
-            input: {
-              pageInput: {
-                pageSize: params.pageSize || 10,
-                current: params.current || 1,
+          console.log('first')
+          const { data } = await getCourses({
+            variables: {
+              input: {
+                pageInput: {
+                  pageSize: params.pageSize || 10,
+                  current: params.current || 1,
+                },
+                name: params.name,
               },
-              name: params.name,
             },
           })
-          if (errors) {
+          if (error) {
             message.error('请求失败')
-            console.error(errors)
+            console.error(error)
           }
           return {
             data: data?.pageCourse?.courses || [],
-            success: errors ? false : true,
+            success: error ? false : true,
             total: data?.pageCourse?.pageInfo?.total || 0,
           }
         }}
