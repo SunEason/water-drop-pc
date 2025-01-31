@@ -44,6 +44,7 @@ export type Course = {
   createTime: Scalars['DateTime']['output']
   deletedAt?: Maybe<Scalars['DateTime']['output']>
   desc?: Maybe<Scalars['String']['output']>
+  duration: Scalars['Int']['output']
   group: Scalars['String']['output']
   id: Scalars['String']['output']
   limitNumber: Scalars['Int']['output']
@@ -140,6 +141,7 @@ export type MutationUpdateUserInfoArgs = {
 export type MutationCourseInput = {
   baseAbility: Scalars['String']['input']
   desc?: InputMaybe<Scalars['String']['input']>
+  duration: Scalars['Int']['input']
   group: Scalars['String']['input']
   limitNumber: Scalars['Int']['input']
   name: Scalars['String']['input']
@@ -383,7 +385,56 @@ export type PageCourseQuery = {
       reserveInfo?: string | null
       refundInfo?: string | null
       otherInfo?: string | null
+      duration: number
     }> | null
+  } | null
+}
+
+export type GetCourseQueryVariables = Exact<{
+  id: Scalars['String']['input']
+}>
+
+export type GetCourseQuery = {
+  __typename?: 'Query'
+  getCourse?: {
+    __typename?: 'Course'
+    id: string
+    createTime: string
+    updateTime: string
+    deletedAt?: string | null
+    name: string
+    group: string
+    baseAbility: string
+    limitNumber: number
+    desc?: string | null
+    reserveInfo?: string | null
+    refundInfo?: string | null
+    otherInfo?: string | null
+    duration: number
+  } | null
+}
+
+export type CommitCourseMutationVariables = Exact<{
+  input: MutationCourseInput
+  id?: InputMaybe<Scalars['String']['input']>
+}>
+
+export type CommitCourseMutation = {
+  __typename?: 'Mutation'
+  commitCourse?: {
+    __typename?: 'Course'
+    id: string
+    createTime: string
+    updateTime: string
+    deletedAt?: string | null
+    name: string
+    group: string
+    baseAbility: string
+    limitNumber: number
+    desc?: string | null
+    reserveInfo?: string | null
+    refundInfo?: string | null
+    otherInfo?: string | null
   } | null
 }
 
@@ -763,6 +814,7 @@ export const PageCourseDocument = gql`
         reserveInfo
         refundInfo
         otherInfo
+        duration
       }
     }
   }
@@ -835,6 +887,157 @@ export type PageCourseSuspenseQueryHookResult = ReturnType<
 export type PageCourseQueryResult = Apollo.QueryResult<
   PageCourseQuery,
   PageCourseQueryVariables
+>
+export const GetCourseDocument = gql`
+  query GetCourse($id: String!) {
+    getCourse(id: $id) {
+      id
+      createTime
+      updateTime
+      deletedAt
+      name
+      group
+      baseAbility
+      limitNumber
+      desc
+      reserveInfo
+      refundInfo
+      otherInfo
+      duration
+    }
+  }
+`
+
+/**
+ * __useGetCourseQuery__
+ *
+ * To run a query within a React component, call `useGetCourseQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetCourseQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetCourseQuery({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useGetCourseQuery(
+  baseOptions: Apollo.QueryHookOptions<
+    GetCourseQuery,
+    GetCourseQueryVariables
+  > &
+    (
+      | { variables: GetCourseQueryVariables; skip?: boolean }
+      | { skip: boolean }
+    ),
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useQuery<GetCourseQuery, GetCourseQueryVariables>(
+    GetCourseDocument,
+    options,
+  )
+}
+export function useGetCourseLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    GetCourseQuery,
+    GetCourseQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useLazyQuery<GetCourseQuery, GetCourseQueryVariables>(
+    GetCourseDocument,
+    options,
+  )
+}
+export function useGetCourseSuspenseQuery(
+  baseOptions?:
+    | Apollo.SkipToken
+    | Apollo.SuspenseQueryHookOptions<GetCourseQuery, GetCourseQueryVariables>,
+) {
+  const options =
+    baseOptions === Apollo.skipToken
+      ? baseOptions
+      : { ...defaultOptions, ...baseOptions }
+  return Apollo.useSuspenseQuery<GetCourseQuery, GetCourseQueryVariables>(
+    GetCourseDocument,
+    options,
+  )
+}
+export type GetCourseQueryHookResult = ReturnType<typeof useGetCourseQuery>
+export type GetCourseLazyQueryHookResult = ReturnType<
+  typeof useGetCourseLazyQuery
+>
+export type GetCourseSuspenseQueryHookResult = ReturnType<
+  typeof useGetCourseSuspenseQuery
+>
+export type GetCourseQueryResult = Apollo.QueryResult<
+  GetCourseQuery,
+  GetCourseQueryVariables
+>
+export const CommitCourseDocument = gql`
+  mutation CommitCourse($input: MutationCourseInput!, $id: String) {
+    commitCourse(input: $input, id: $id) {
+      id
+      createTime
+      updateTime
+      deletedAt
+      name
+      group
+      baseAbility
+      limitNumber
+      desc
+      reserveInfo
+      refundInfo
+      otherInfo
+    }
+  }
+`
+export type CommitCourseMutationFn = Apollo.MutationFunction<
+  CommitCourseMutation,
+  CommitCourseMutationVariables
+>
+
+/**
+ * __useCommitCourseMutation__
+ *
+ * To run a mutation, you first call `useCommitCourseMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCommitCourseMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [commitCourseMutation, { data, loading, error }] = useCommitCourseMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useCommitCourseMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    CommitCourseMutation,
+    CommitCourseMutationVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useMutation<
+    CommitCourseMutation,
+    CommitCourseMutationVariables
+  >(CommitCourseDocument, options)
+}
+export type CommitCourseMutationHookResult = ReturnType<
+  typeof useCommitCourseMutation
+>
+export type CommitCourseMutationResult =
+  Apollo.MutationResult<CommitCourseMutation>
+export type CommitCourseMutationOptions = Apollo.BaseMutationOptions<
+  CommitCourseMutation,
+  CommitCourseMutationVariables
 >
 export const OrganizationsDocument = gql`
   query Organizations($input: PageOrganizationInput) {

@@ -8,7 +8,7 @@ import { useState } from 'react'
 import EditOrg from './components/EditOrg'
 
 function Org() {
-  const { loading, data, refetch } = useOrganizationsQuery({
+  const { data, loading, refetch } = useOrganizationsQuery({
     variables: {
       input: {
         pageInput: {
@@ -40,11 +40,6 @@ function Org() {
     console.log(id)
   }
 
-  const onCloseDrawer = () => {
-    setShowEdit(false)
-    refetch()
-  }
-
   const dataSource = data?.pageOrganization?.organizations?.map((item) => {
     return {
       ...item,
@@ -71,7 +66,6 @@ function Org() {
   return (
     <PageContainer
       className={styles.container}
-      loading={loading}
       header={{
         title: '门店管理',
       }}
@@ -97,6 +91,7 @@ function Org() {
             })
           },
         }}
+        loading={loading}
         split
         showActions="hover"
         rowSelection={false}
@@ -119,7 +114,13 @@ function Org() {
         }}
         dataSource={dataSource || []}
       />
-      {showEdit && <EditOrg id={curId} onClose={onCloseDrawer} />}
+      {showEdit && (
+        <EditOrg
+          id={curId}
+          onClose={() => setShowEdit(false)}
+          onSuccess={() => refetch()}
+        />
+      )}
     </PageContainer>
   )
 }

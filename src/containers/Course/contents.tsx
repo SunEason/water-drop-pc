@@ -1,6 +1,5 @@
 import { Course } from '@/generated'
 import { ProColumns } from '@ant-design/pro-components'
-import { Button } from 'antd'
 
 export const columns: ProColumns<Course>[] = [
   {
@@ -20,17 +19,5 @@ export const columns: ProColumns<Course>[] = [
     dataIndex: 'duration',
     width: 75,
     search: false,
-  },
-  {
-    title: '操作',
-    valueType: 'option',
-    width: 80,
-    render: (_, record) => {
-      return (
-        <Button type="link" onClick={() => console.log(record)}>
-          编辑
-        </Button>
-      )
-    },
   },
 ]
