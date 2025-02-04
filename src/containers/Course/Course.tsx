@@ -7,12 +7,14 @@ import { Button, message } from 'antd'
 import { PlusOutlined } from '@ant-design/icons'
 import { useRef, useState } from 'react'
 import EditCourse from './components/EditCourse'
+import OrderTime from './components/OrderTime'
 
 function Course() {
   const actionRef = useRef<ActionType>()
   const [getCourses, { loading }] = usePageCourseLazyQuery()
 
   const [showEdit, setShowEdit] = useState(false)
+  const [showOrderTime, setShowOrderTime] = useState(false)
   const [curId, setCurId] = useState('')
 
   const addCourse = () => {
@@ -23,6 +25,11 @@ function Course() {
   const editCourse = (id: string) => {
     setCurId(id)
     setShowEdit(true)
+  }
+
+  const editOrderTime = (id: string) => {
+    setCurId(id)
+    setShowOrderTime(true)
   }
 
   return (
@@ -40,13 +47,25 @@ function Course() {
           {
             title: '操作',
             valueType: 'option',
-            width: 80,
+            width: 200,
+            align: 'center',
             render: (_, record) => {
-              return (
-                <Button type="link" onClick={() => editCourse(record.id)}>
+              return [
+                <Button
+                  key="1"
+                  type="link"
+                  onClick={() => editCourse(record.id)}
+                >
                   编辑
-                </Button>
-              )
+                </Button>,
+                <Button
+                  key="2"
+                  type="link"
+                  onClick={() => editOrderTime(record.id)}
+                >
+                  可约时间
+                </Button>,
+              ]
             },
           },
         ]}
@@ -95,6 +114,12 @@ function Course() {
           // onSuccess={() => actionRef.current?.reload()}
           onSuccess={() => actionRef.current?.reload()}
         />
+      )}
+      {showOrderTime && (
+        <OrderTime
+          id={curId}
+          onClose={() => setShowOrderTime(false)}
+        ></OrderTime>
       )}
     </PageContainer>
   )
