@@ -1,3 +1,4 @@
+import { Weekday } from '@/generated'
 import { ProColumns } from '@ant-design/pro-components'
 import { Popconfirm, Space } from 'antd'
 
@@ -10,37 +11,37 @@ export type TWeek =
   | 'saturday'
   | 'sunday'
 export interface IDay {
-  key: TWeek
+  key: Weekday
   label: string
 }
 
 export const DAYS: IDay[] = [
   {
-    key: 'monday',
+    key: Weekday.Monday,
     label: '周一',
   },
   {
-    key: 'tuesday',
+    key: Weekday.Tuesday,
     label: '周二',
   },
   {
-    key: 'wednesday',
+    key: Weekday.Wednesday,
     label: '周三',
   },
   {
-    key: 'thursday',
+    key: Weekday.Thursday,
     label: '周四',
   },
   {
-    key: 'friday',
+    key: Weekday.Friday,
     label: '周五',
   },
   {
-    key: 'saturday',
+    key: Weekday.Saturday,
     label: '周六',
   },
   {
-    key: 'sunday',
+    key: Weekday.Sunday,
     label: '周日',
   },
 ]
@@ -109,6 +110,6 @@ export const getColumns = ({ onDelete }: IColumns): ProColumns[] => {
 }
 
 export interface IWeekCourse {
-  week: TWeek
+  week: Weekday
   orderTime: IOrderTime[]
 }

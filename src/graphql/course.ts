@@ -65,3 +65,29 @@ export const commitCourse = gql`
     }
   }
 `
+
+export const getOrderTime = gql`
+  query GetOrderTime($id: String!) {
+    getOrderTime(id: $id) {
+      week
+      orderTime {
+        key
+        startTime
+        endTime
+      }
+    }
+  }
+`
+
+export const setOrderTime = gql`
+  mutation SetOrderTime($id: String!, $input: [ReducibleTimeInput!]) {
+    setOrderTime(id: $id, input: $input) {
+      week
+      orderTime {
+        key
+        startTime
+        endTime
+      }
+    }
+  }
+`

@@ -50,6 +50,7 @@ export type Course = {
   limitNumber: Scalars['Int']['output']
   name: Scalars['String']['output']
   otherInfo?: Maybe<Scalars['String']['output']>
+  reducibleTime?: Maybe<Array<ReducibleTime>>
   refundInfo?: Maybe<Scalars['String']['output']>
   reserveInfo?: Maybe<Scalars['String']['output']>
   updateTime: Scalars['DateTime']['output']
@@ -69,6 +70,7 @@ export type Mutation = {
   removeUser?: Maybe<User>
   /** 发送验证码 */
   sendMessage?: Maybe<Scalars['Boolean']['output']>
+  setOrderTime?: Maybe<Array<ReducibleTime>>
   updateCourse?: Maybe<Course>
   updateOrganization?: Maybe<Organization>
   updateUser?: Maybe<User>
@@ -118,6 +120,11 @@ export type MutationSendMessageArgs = {
   tel: Scalars['String']['input']
 }
 
+export type MutationSetOrderTimeArgs = {
+  id: Scalars['String']['input']
+  input?: InputMaybe<Array<ReducibleTimeInput>>
+}
+
 export type MutationUpdateCourseArgs = {
   id: Scalars['String']['input']
   input: MutationCourseInput
@@ -146,6 +153,7 @@ export type MutationCourseInput = {
   limitNumber: Scalars['Int']['input']
   name: Scalars['String']['input']
   otherInfo?: InputMaybe<Scalars['String']['input']>
+  reducibleTime?: InputMaybe<Array<ReducibleTimeInput>>
   refundInfo?: InputMaybe<Scalars['String']['input']>
   reserveInfo?: InputMaybe<Scalars['String']['input']>
 }
@@ -175,6 +183,19 @@ export type OssParams = {
   host: Scalars['String']['output']
   policy: Scalars['String']['output']
   signature: Scalars['String']['output']
+}
+
+export type OrderTime = {
+  __typename?: 'OrderTime'
+  endTime: Scalars['String']['output']
+  key: Scalars['Int']['output']
+  startTime: Scalars['String']['output']
+}
+
+export type OrderTimeInput = {
+  endTime: Scalars['String']['input']
+  key: Scalars['Int']['input']
+  startTime: Scalars['String']['input']
 }
 
 /**  Organization Images: front, room, other  */
@@ -238,6 +259,7 @@ export type Query = {
   __typename?: 'Query'
   OSSInfo?: Maybe<OssParams>
   getCourse?: Maybe<Course>
+  getOrderTime?: Maybe<Array<ReducibleTime>>
   getOrganization?: Maybe<Organization>
   getUserInfo?: Maybe<User>
   pageCourse?: Maybe<PageCourse>
@@ -248,6 +270,10 @@ export type Query = {
 }
 
 export type QueryGetCourseArgs = {
+  id: Scalars['String']['input']
+}
+
+export type QueryGetOrderTimeArgs = {
   id: Scalars['String']['input']
 }
 
@@ -269,6 +295,17 @@ export type QueryStudentsArgs = {
 
 export type QueryUserArgs = {
   id: Scalars['String']['input']
+}
+
+export type ReducibleTime = {
+  __typename?: 'ReducibleTime'
+  orderTime: Array<OrderTime>
+  week: Weekday
+}
+
+export type ReducibleTimeInput = {
+  orderTime: Array<OrderTimeInput>
+  week: Weekday
 }
 
 export type Student = {
@@ -315,6 +352,16 @@ export type UserUpdateInput = {
   avatar?: InputMaybe<Scalars['String']['input']>
   desc?: InputMaybe<Scalars['String']['input']>
   name?: InputMaybe<Scalars['String']['input']>
+}
+
+export enum Weekday {
+  Friday = 'friday',
+  Monday = 'monday',
+  Saturday = 'saturday',
+  Sunday = 'sunday',
+  Thursday = 'thursday',
+  Tuesday = 'tuesday',
+  Wednesday = 'wednesday',
 }
 
 export type PageInfo = {
@@ -436,6 +483,43 @@ export type CommitCourseMutation = {
     refundInfo?: string | null
     otherInfo?: string | null
   } | null
+}
+
+export type GetOrderTimeQueryVariables = Exact<{
+  id: Scalars['String']['input']
+}>
+
+export type GetOrderTimeQuery = {
+  __typename?: 'Query'
+  getOrderTime?: Array<{
+    __typename?: 'ReducibleTime'
+    week: Weekday
+    orderTime: Array<{
+      __typename?: 'OrderTime'
+      key: number
+      startTime: string
+      endTime: string
+    }>
+  }> | null
+}
+
+export type SetOrderTimeMutationVariables = Exact<{
+  id: Scalars['String']['input']
+  input?: InputMaybe<Array<ReducibleTimeInput> | ReducibleTimeInput>
+}>
+
+export type SetOrderTimeMutation = {
+  __typename?: 'Mutation'
+  setOrderTime?: Array<{
+    __typename?: 'ReducibleTime'
+    week: Weekday
+    orderTime: Array<{
+      __typename?: 'OrderTime'
+      key: number
+      startTime: string
+      endTime: string
+    }>
+  }> | null
 }
 
 export type OrganizationsQueryVariables = Exact<{
@@ -1038,6 +1122,149 @@ export type CommitCourseMutationResult =
 export type CommitCourseMutationOptions = Apollo.BaseMutationOptions<
   CommitCourseMutation,
   CommitCourseMutationVariables
+>
+export const GetOrderTimeDocument = gql`
+  query GetOrderTime($id: String!) {
+    getOrderTime(id: $id) {
+      week
+      orderTime {
+        key
+        startTime
+        endTime
+      }
+    }
+  }
+`
+
+/**
+ * __useGetOrderTimeQuery__
+ *
+ * To run a query within a React component, call `useGetOrderTimeQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetOrderTimeQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetOrderTimeQuery({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useGetOrderTimeQuery(
+  baseOptions: Apollo.QueryHookOptions<
+    GetOrderTimeQuery,
+    GetOrderTimeQueryVariables
+  > &
+    (
+      | { variables: GetOrderTimeQueryVariables; skip?: boolean }
+      | { skip: boolean }
+    ),
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useQuery<GetOrderTimeQuery, GetOrderTimeQueryVariables>(
+    GetOrderTimeDocument,
+    options,
+  )
+}
+export function useGetOrderTimeLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    GetOrderTimeQuery,
+    GetOrderTimeQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useLazyQuery<GetOrderTimeQuery, GetOrderTimeQueryVariables>(
+    GetOrderTimeDocument,
+    options,
+  )
+}
+export function useGetOrderTimeSuspenseQuery(
+  baseOptions?:
+    | Apollo.SkipToken
+    | Apollo.SuspenseQueryHookOptions<
+        GetOrderTimeQuery,
+        GetOrderTimeQueryVariables
+      >,
+) {
+  const options =
+    baseOptions === Apollo.skipToken
+      ? baseOptions
+      : { ...defaultOptions, ...baseOptions }
+  return Apollo.useSuspenseQuery<GetOrderTimeQuery, GetOrderTimeQueryVariables>(
+    GetOrderTimeDocument,
+    options,
+  )
+}
+export type GetOrderTimeQueryHookResult = ReturnType<
+  typeof useGetOrderTimeQuery
+>
+export type GetOrderTimeLazyQueryHookResult = ReturnType<
+  typeof useGetOrderTimeLazyQuery
+>
+export type GetOrderTimeSuspenseQueryHookResult = ReturnType<
+  typeof useGetOrderTimeSuspenseQuery
+>
+export type GetOrderTimeQueryResult = Apollo.QueryResult<
+  GetOrderTimeQuery,
+  GetOrderTimeQueryVariables
+>
+export const SetOrderTimeDocument = gql`
+  mutation SetOrderTime($id: String!, $input: [ReducibleTimeInput!]) {
+    setOrderTime(id: $id, input: $input) {
+      week
+      orderTime {
+        key
+        startTime
+        endTime
+      }
+    }
+  }
+`
+export type SetOrderTimeMutationFn = Apollo.MutationFunction<
+  SetOrderTimeMutation,
+  SetOrderTimeMutationVariables
+>
+
+/**
+ * __useSetOrderTimeMutation__
+ *
+ * To run a mutation, you first call `useSetOrderTimeMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useSetOrderTimeMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [setOrderTimeMutation, { data, loading, error }] = useSetOrderTimeMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useSetOrderTimeMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    SetOrderTimeMutation,
+    SetOrderTimeMutationVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useMutation<
+    SetOrderTimeMutation,
+    SetOrderTimeMutationVariables
+  >(SetOrderTimeDocument, options)
+}
+export type SetOrderTimeMutationHookResult = ReturnType<
+  typeof useSetOrderTimeMutation
+>
+export type SetOrderTimeMutationResult =
+  Apollo.MutationResult<SetOrderTimeMutation>
+export type SetOrderTimeMutationOptions = Apollo.BaseMutationOptions<
+  SetOrderTimeMutation,
+  SetOrderTimeMutationVariables
 >
 export const OrganizationsDocument = gql`
   query Organizations($input: PageOrganizationInput) {
