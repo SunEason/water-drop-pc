@@ -1,6 +1,7 @@
 import { Weekday } from '@/generated'
 import { ProColumns } from '@ant-design/pro-components'
 import { Popconfirm, Space } from 'antd'
+import dayjs, { Dayjs } from 'dayjs'
 
 export type TWeek =
   | 'monday'
@@ -112,4 +113,11 @@ export const getColumns = ({ onDelete }: IColumns): ProColumns[] => {
 export interface IWeekCourse {
   week: Weekday
   orderTime: IOrderTime[]
+}
+
+export const formatTime = (time: Dayjs | string) => {
+  if (dayjs.isDayjs(time)) {
+    return time.format('HH:mm:ss')
+  }
+  return time
 }
