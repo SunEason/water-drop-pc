@@ -7,6 +7,8 @@ import {
   IWeekCourse,
   IOrderTime,
   formatTime,
+  getMaxKey,
+  isWorkDay,
 } from './contents'
 import { EditableProTable } from '@ant-design/pro-components'
 import { ChromeOutlined, RedoOutlined } from '@ant-design/icons'
@@ -18,9 +20,10 @@ interface IProps {
 }
 
 function OrderTime({ id, onClose }: IProps) {
+  const [form] = Form.useForm()
+
   const [currentDay, setCurrentDay] = useState<IDay>(DAYS[0])
   const [reducibleTime, setReducibleTime] = useState<IWeekCourse[]>([])
-  const [form] = Form.useForm()
 
   const {
     data,
@@ -51,6 +54,21 @@ function OrderTime({ id, onClose }: IProps) {
     setCurrentDay(current)
   }
 
+  const onSubmit = async (input: IWeekCourse[]) => {
+    const res = await submit({
+      variables: {
+        id: id,
+        input: input,
+      },
+    })
+    if (res.errors) {
+      message.error(`保存失败`)
+      return
+    }
+    message.success(`保存成功`)
+    refetch()
+  }
+
   const onFinish = async (newValue: IOrderTime[]) => {
     let orderTime = [...reducibleTime]
     if (reducibleTime.find((item) => item.week === currentDay.key)) {
@@ -67,18 +85,38 @@ function OrderTime({ id, onClose }: IProps) {
         orderTime: newValue,
       })
     }
-    const res = await submit({
-      variables: {
-        id: id,
-        input: orderTime,
-      },
-    })
-    if (res.errors) {
-      message.error(`保存失败`)
-      return
-    }
-    message.success(`保存成功`)
-    refetch()
+    onSubmit(orderTime)
+  }
+
+  const onDelete = (key: number) => {
+    const newValue = currentValue.filter((item) => item.key !== key)
+    onFinish(newValue)
+  }
+
+  const onWorkdaySync = async () => {
+    const newValue = DAYS.reduce((per: IWeekCourse[], cur) => {
+      if (isWorkDay(cur.key)) {
+        per.push({
+          week: cur.key,
+          orderTime: currentValue,
+        })
+      }
+      return per
+    }, [])
+
+    onSubmit(newValue)
+  }
+
+  const onWeekSync = () => {
+    const newValue = DAYS.reduce((per: IWeekCourse[], cur) => {
+      per.push({
+        week: cur.key,
+        orderTime: currentValue,
+      })
+      return per
+    }, [])
+
+    onSubmit(newValue)
   }
 
   return (
@@ -131,15 +169,15 @@ function OrderTime({ id, onClose }: IProps) {
         }}
         value={currentValue}
         recordCreatorProps={{
-          record: (index: number) => {
+          record: () => {
             return {
-              key: index + 1,
+              key: getMaxKey(currentValue) + 1,
               startTime: '12:00:00',
               endTime: '12:30:00',
             }
           },
         }}
-        columns={getColumns({ onDelete: (key) => alert(key) })}
+        columns={getColumns({ onDelete: onDelete })}
       />
       <Row gutter={16}>
         <Col span={12}>
@@ -147,6 +185,8 @@ function OrderTime({ id, onClose }: IProps) {
             icon={<RedoOutlined />}
             style={{ width: '100%' }}
             type="primary"
+            onClick={onWorkdaySync}
+            disabled={!isWorkDay(currentDay.key)}
           >
             全工作日同步
           </Button>
@@ -157,6 +197,7 @@ function OrderTime({ id, onClose }: IProps) {
             style={{ width: '100%' }}
             type="primary"
             danger
+            onClick={onWeekSync}
           >
             全周同步
           </Button>

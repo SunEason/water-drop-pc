@@ -9,7 +9,7 @@ interface IRoute {
 
 export const ROUTE_KEY = {
   HOME: 'home',
-  NOT_FOUND: '404',
+  NOT_FOUND: 'p404',
   MY: 'my',
   ORG: 'org',
   ORG_EMPTY: 'org_empty',

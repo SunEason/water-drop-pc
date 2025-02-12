@@ -7,16 +7,7 @@ import { useEffect, useState } from 'react'
 import { useUserContext } from '@/store/user'
 import { useRouter } from '@/hooks/router'
 import { ROUTE_KEY } from '@/route/menus'
-
-const CURRENT_ORG = 'CURRENT_ORG'
-const getCurrentOrg = () => {
-  try {
-    return JSON.parse(localStorage.getItem(CURRENT_ORG) || '')
-  } catch (error) {
-    console.log(error)
-    return undefined
-  }
-}
+import { CURRENT_ORG, getCurrentOrg } from '@/utils/org'
 
 function OrgSelect() {
   const { setStore } = useUserContext()

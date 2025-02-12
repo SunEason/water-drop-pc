@@ -1,5 +1,6 @@
 import { ApolloClient, createHttpLink, InMemoryCache } from '@apollo/client'
 import { setContext } from '@apollo/client/link/context'
+import { getCurrentOrg } from './org'
 
 const httpsLink = createHttpLink({
   uri: import.meta.env.VITE_GRAPHQL_URL,
@@ -13,6 +14,7 @@ const authLink = setContext((_, { headers }) => {
     headers: {
       ...headers,
       authorization: token ? `Bearer ${token}` : '',
+      orgId: getCurrentOrg()?.value,
     },
   }
 })

@@ -28,7 +28,7 @@ export const useRouter = () => {
 export const useRoute = () => {
   const r = useLocation()
   const route = useMemo(
-    () => routes.find((item) => matchPath(item.path, r.pathname)),
+    () => routes.find((item) => matchPath(`/${item.path}`, r.pathname)),
     [r.pathname],
   )
   return route

@@ -121,3 +121,18 @@ export const formatTime = (time: Dayjs | string) => {
   }
   return time
 }
+export const isWorkDay = (key: Weekday) => {
+  return [
+    Weekday.Monday,
+    Weekday.Tuesday,
+    Weekday.Wednesday,
+    Weekday.Thursday,
+    Weekday.Friday,
+  ].includes(key)
+}
+
+export const getMaxKey = (orderTimes?: IOrderTime[]) => {
+  const keys = orderTimes?.map((item) => item.key) || []
+  if (keys.length === 0) return 0
+  return Math.max(...keys)
+}
