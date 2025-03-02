@@ -130,11 +130,6 @@ function OrderTime({ id, onClose }: IProps) {
           textAlign: 'right',
         },
       }}
-      // footer={
-      //   <Button type="primary" onClick={onFinish} loading={submitting}>
-      //     保存
-      //   </Button>
-      // }
     >
       <Tabs items={DAYS} type="card" onChange={onTabsChange}></Tabs>
       <EditableProTable<IOrderTime>

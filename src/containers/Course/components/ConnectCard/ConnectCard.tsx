@@ -1,6 +1,9 @@
-import { Button, Col, Drawer, Form, message, Row, Tabs } from 'antd'
+import { Drawer } from 'antd'
 // import { useEffect, useMemo, useState } from 'react'
-// import { EditableProTable } from '@ant-design/pro-components'
+import { EditableProTable } from '@ant-design/pro-components'
+import { Card, CardType, useCardsQuery } from '@/generated'
+import { useEffect, useState } from 'react'
+import { getColumns } from './contents'
 // import { ChromeOutlined, RedoOutlined } from '@ant-design/icons'
 // import { useGetOrderTimeQuery, useSetOrderTimeMutation } from '@/generated'
 
@@ -10,6 +13,21 @@ interface IProps {
 }
 
 function ConnectCard({ id, onClose }: IProps) {
+  const { data, loading: querying } = useCardsQuery({
+    variables: {
+      courseId: id,
+    },
+  })
+  const [cards, setCards] = useState<Card[]>()
+
+  useEffect(() => {
+    setCards(data?.cards || [])
+  }, [data])
+
+  const onDelete = (key: string) => {
+    alert(key)
+  }
+
   return (
     <Drawer
       title="关联消费卡"
@@ -21,18 +39,12 @@ function ConnectCard({ id, onClose }: IProps) {
           textAlign: 'right',
         },
       }}
-      // footer={
-      //   <Button type="primary" onClick={onFinish} loading={submitting}>
-      //     保存
-      //   </Button>
-      // }
     >
-      {id}
-      {/* <EditableProTable
+      <EditableProTable<Omit<Card, 'createTime'>>
         rowKey="id"
         loading={querying}
         editable={{
-          form: form,
+          // form: form,
           actionRender: (_row, _config, defaultDoms) => {
             return [defaultDoms.save, defaultDoms.cancel]
           },
@@ -40,38 +52,41 @@ function ConnectCard({ id, onClose }: IProps) {
           //   console.log(record, dataSource)
           // },
           onSave: async (rowKey, d) => {
-            const values = await form.validateFields()
-            const startTime = formatTime(values[d.key].startTime)
-            const endTime = formatTime(values[d.key].endTime)
-            const data = {
-              key: d.key,
-              startTime,
-              endTime,
-            }
-            if (currentValue.find((item) => item.key === rowKey)) {
-              const newValue = currentValue.map((item) => {
-                return item.key === rowKey ? data : { ...item }
-              })
-              onFinish(newValue)
-              return
-            }
-            onFinish([...currentValue, data])
+            console.log(rowKey, d)
+            // const values = await form.validateFields()
+            // const startTime = formatTime(values[d.key].startTime)
+            // const endTime = formatTime(values[d.key].endTime)
+            // const data = {
+            //   key: d.key,
+            //   startTime,
+            //   endTime,
+            // }
+            // if (currentValue.find((item) => item.key === rowKey)) {
+            //   const newValue = currentValue.map((item) => {
+            //     return item.key === rowKey ? data : { ...item }
+            //   })
+            //   onFinish(newValue)
+            //   return
+            // }
+            // onFinish([...currentValue, data])
           },
         }}
-        value={currentValue}
+        value={cards}
         recordCreatorProps={{
           record: () => {
             return {
-              key: getMaxKey(currentValue) + 1,
-              startTime: '12:00:00',
-              endTime: '12:30:00',
+              id: 'new',
+              name: '',
+              type: CardType.Time,
+              times: 0,
+              duration: 0,
             }
           },
         }}
         columns={getColumns({ onDelete: onDelete })}
-      /> */
-      /*
-      <Row gutter={16}>
+      />
+
+      {/* <Row gutter={16}>
         <Col span={12}>
           <Button
             icon={<RedoOutlined />}

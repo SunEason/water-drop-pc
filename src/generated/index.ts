@@ -46,7 +46,7 @@ export type Card = {
   name: Scalars['String']['output']
   times?: Maybe<Scalars['Int']['output']>
   type: CardType
-  updateTime: Scalars['DateTime']['output']
+  updateTime?: Maybe<Scalars['DateTime']['output']>
 }
 
 export type CardInput = {
@@ -476,7 +476,7 @@ export type CardsQuery = {
     __typename?: 'Card'
     id: string
     createTime: string
-    updateTime: string
+    updateTime?: string | null
     name: string
     type: CardType
     times?: number | null
@@ -496,7 +496,7 @@ export type CommitCardMutation = {
     __typename?: 'Card'
     id: string
     createTime: string
-    updateTime: string
+    updateTime?: string | null
     name: string
     type: CardType
     times?: number | null
