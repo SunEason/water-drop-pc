@@ -38,6 +38,29 @@ export type AuthLogin = {
   token?: Maybe<Scalars['String']['output']>
 }
 
+export type Card = {
+  __typename?: 'Card'
+  createTime: Scalars['DateTime']['output']
+  duration?: Maybe<Scalars['Int']['output']>
+  id: Scalars['String']['output']
+  name: Scalars['String']['output']
+  times?: Maybe<Scalars['Int']['output']>
+  type: CardType
+  updateTime: Scalars['DateTime']['output']
+}
+
+export type CardInput = {
+  duration?: InputMaybe<Scalars['Int']['input']>
+  name: Scalars['String']['input']
+  times?: InputMaybe<Scalars['Int']['input']>
+  type: CardType
+}
+
+export enum CardType {
+  Duration = 'DURATION',
+  Time = 'TIME',
+}
+
 export type Course = {
   __typename?: 'Course'
   baseAbility: Scalars['String']['output']
@@ -56,25 +79,40 @@ export type Course = {
   updateTime: Scalars['DateTime']['output']
 }
 
+export enum Method {
+  Create = 'create',
+  Update = 'update',
+}
+
 export type Mutation = {
   __typename?: 'Mutation'
+  commitCard: Card
   commitCourse?: Maybe<Course>
   commitOrganization?: Maybe<Organization>
+  createCard: Card
   createCourse?: Maybe<Course>
   createOrganization?: Maybe<Organization>
   createUser?: Maybe<User>
   /** 登录 */
   login?: Maybe<AuthLogin>
+  removeCard: Scalars['Boolean']['output']
   removeCourse?: Maybe<Scalars['Boolean']['output']>
   removeOrganization?: Maybe<Scalars['Boolean']['output']>
   removeUser?: Maybe<User>
   /** 发送验证码 */
   sendMessage?: Maybe<Scalars['Boolean']['output']>
   setOrderTime?: Maybe<Array<ReducibleTime>>
+  updateCard: Card
   updateCourse?: Maybe<Course>
   updateOrganization?: Maybe<Organization>
   updateUser?: Maybe<User>
   updateUserInfo?: Maybe<User>
+}
+
+export type MutationCommitCardArgs = {
+  id: Scalars['String']['input']
+  input: CardInput
+  method: Method
 }
 
 export type MutationCommitCourseArgs = {
@@ -85,6 +123,11 @@ export type MutationCommitCourseArgs = {
 export type MutationCommitOrganizationArgs = {
   id?: InputMaybe<Scalars['String']['input']>
   input: MutationOrganizationInput
+}
+
+export type MutationCreateCardArgs = {
+  courseId: Scalars['String']['input']
+  input: CardInput
 }
 
 export type MutationCreateCourseArgs = {
@@ -102,6 +145,10 @@ export type MutationCreateUserArgs = {
 export type MutationLoginArgs = {
   code: Scalars['String']['input']
   tel: Scalars['String']['input']
+}
+
+export type MutationRemoveCardArgs = {
+  id: Scalars['String']['input']
 }
 
 export type MutationRemoveCourseArgs = {
@@ -123,6 +170,11 @@ export type MutationSendMessageArgs = {
 export type MutationSetOrderTimeArgs = {
   id: Scalars['String']['input']
   input?: InputMaybe<Array<ReducibleTimeInput>>
+}
+
+export type MutationUpdateCardArgs = {
+  id: Scalars['String']['input']
+  input: CardInput
 }
 
 export type MutationUpdateCourseArgs = {
@@ -258,6 +310,8 @@ export type PageOrganizationInput = {
 export type Query = {
   __typename?: 'Query'
   OSSInfo?: Maybe<OssParams>
+  card?: Maybe<Card>
+  cards?: Maybe<Array<Card>>
   getCourse?: Maybe<Course>
   getOrderTime?: Maybe<Array<ReducibleTime>>
   getOrganization?: Maybe<Organization>
@@ -267,6 +321,14 @@ export type Query = {
   students?: Maybe<Students>
   user?: Maybe<User>
   users?: Maybe<Array<User>>
+}
+
+export type QueryCardArgs = {
+  id: Scalars['String']['input']
+}
+
+export type QueryCardsArgs = {
+  courseId: Scalars['String']['input']
 }
 
 export type QueryGetCourseArgs = {
@@ -402,6 +464,44 @@ export type LoginMutation = {
     success: boolean
     token?: string | null
   } | null
+}
+
+export type CardsQueryVariables = Exact<{
+  courseId: Scalars['String']['input']
+}>
+
+export type CardsQuery = {
+  __typename?: 'Query'
+  cards?: Array<{
+    __typename?: 'Card'
+    id: string
+    createTime: string
+    updateTime: string
+    name: string
+    type: CardType
+    times?: number | null
+    duration?: number | null
+  }> | null
+}
+
+export type CommitCardMutationVariables = Exact<{
+  input: CardInput
+  commitCardId: Scalars['String']['input']
+  method: Method
+}>
+
+export type CommitCardMutation = {
+  __typename?: 'Mutation'
+  commitCard: {
+    __typename?: 'Card'
+    id: string
+    createTime: string
+    updateTime: string
+    name: string
+    type: CardType
+    times?: number | null
+    duration?: number | null
+  }
 }
 
 export type PageCourseQueryVariables = Exact<{
@@ -876,6 +976,139 @@ export type LoginMutationResult = Apollo.MutationResult<LoginMutation>
 export type LoginMutationOptions = Apollo.BaseMutationOptions<
   LoginMutation,
   LoginMutationVariables
+>
+export const CardsDocument = gql`
+  query Cards($courseId: String!) {
+    cards(courseId: $courseId) {
+      id
+      createTime
+      updateTime
+      name
+      type
+      times
+      duration
+    }
+  }
+`
+
+/**
+ * __useCardsQuery__
+ *
+ * To run a query within a React component, call `useCardsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useCardsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useCardsQuery({
+ *   variables: {
+ *      courseId: // value for 'courseId'
+ *   },
+ * });
+ */
+export function useCardsQuery(
+  baseOptions: Apollo.QueryHookOptions<CardsQuery, CardsQueryVariables> &
+    ({ variables: CardsQueryVariables; skip?: boolean } | { skip: boolean }),
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useQuery<CardsQuery, CardsQueryVariables>(
+    CardsDocument,
+    options,
+  )
+}
+export function useCardsLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<CardsQuery, CardsQueryVariables>,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useLazyQuery<CardsQuery, CardsQueryVariables>(
+    CardsDocument,
+    options,
+  )
+}
+export function useCardsSuspenseQuery(
+  baseOptions?:
+    | Apollo.SkipToken
+    | Apollo.SuspenseQueryHookOptions<CardsQuery, CardsQueryVariables>,
+) {
+  const options =
+    baseOptions === Apollo.skipToken
+      ? baseOptions
+      : { ...defaultOptions, ...baseOptions }
+  return Apollo.useSuspenseQuery<CardsQuery, CardsQueryVariables>(
+    CardsDocument,
+    options,
+  )
+}
+export type CardsQueryHookResult = ReturnType<typeof useCardsQuery>
+export type CardsLazyQueryHookResult = ReturnType<typeof useCardsLazyQuery>
+export type CardsSuspenseQueryHookResult = ReturnType<
+  typeof useCardsSuspenseQuery
+>
+export type CardsQueryResult = Apollo.QueryResult<
+  CardsQuery,
+  CardsQueryVariables
+>
+export const CommitCardDocument = gql`
+  mutation CommitCard(
+    $input: CardInput!
+    $commitCardId: String!
+    $method: Method!
+  ) {
+    commitCard(input: $input, id: $commitCardId, method: $method) {
+      id
+      createTime
+      updateTime
+      name
+      type
+      times
+      duration
+    }
+  }
+`
+export type CommitCardMutationFn = Apollo.MutationFunction<
+  CommitCardMutation,
+  CommitCardMutationVariables
+>
+
+/**
+ * __useCommitCardMutation__
+ *
+ * To run a mutation, you first call `useCommitCardMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCommitCardMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [commitCardMutation, { data, loading, error }] = useCommitCardMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *      commitCardId: // value for 'commitCardId'
+ *      method: // value for 'method'
+ *   },
+ * });
+ */
+export function useCommitCardMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    CommitCardMutation,
+    CommitCardMutationVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useMutation<CommitCardMutation, CommitCardMutationVariables>(
+    CommitCardDocument,
+    options,
+  )
+}
+export type CommitCardMutationHookResult = ReturnType<
+  typeof useCommitCardMutation
+>
+export type CommitCardMutationResult = Apollo.MutationResult<CommitCardMutation>
+export type CommitCardMutationOptions = Apollo.BaseMutationOptions<
+  CommitCardMutation,
+  CommitCardMutationVariables
 >
 export const PageCourseDocument = gql`
   query PageCourse($input: PageCourseInput) {
