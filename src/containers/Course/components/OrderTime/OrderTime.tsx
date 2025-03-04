@@ -55,18 +55,19 @@ function OrderTime({ id, onClose }: IProps) {
   }
 
   const onSubmit = async (input: IWeekCourse[]) => {
-    const res = await submit({
+    await submit({
       variables: {
         id: id,
         input: input,
       },
+      onError: () => {
+        message.error(`保存失败`)
+      },
+      onCompleted: () => {
+        message.success(`保存成功`)
+        refetch()
+      },
     })
-    if (res.errors) {
-      message.error(`保存失败`)
-      return
-    }
-    message.success(`保存成功`)
-    refetch()
   }
 
   const onFinish = async (newValue: IOrderTime[]) => {
@@ -143,12 +144,12 @@ function OrderTime({ id, onClose }: IProps) {
           // onValuesChange(record, dataSource) {
           //   console.log(record, dataSource)
           // },
-          onSave: async (rowKey, d) => {
+          onSave: async (rowKey, rowData) => {
             const values = await form.validateFields()
-            const startTime = formatTime(values[d.key].startTime)
-            const endTime = formatTime(values[d.key].endTime)
+            const startTime = formatTime(values[rowData.key].startTime)
+            const endTime = formatTime(values[rowData.key].endTime)
             const data = {
-              key: d.key,
+              key: rowData.key,
               startTime,
               endTime,
             }

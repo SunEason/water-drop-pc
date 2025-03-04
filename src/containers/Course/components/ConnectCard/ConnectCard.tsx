@@ -1,7 +1,15 @@
-import { Drawer } from 'antd'
+import { Drawer, Form, message } from 'antd'
 // import { useEffect, useMemo, useState } from 'react'
 import { EditableProTable } from '@ant-design/pro-components'
-import { Card, CardType, useCardsQuery } from '@/generated'
+import {
+  Card,
+  CardInput,
+  CardType,
+  Method,
+  useCardsQuery,
+  useCommitCardMutation,
+  useRemoveCardMutation,
+} from '@/generated'
 import { useEffect, useState } from 'react'
 import { getColumns } from './contents'
 // import { ChromeOutlined, RedoOutlined } from '@ant-design/icons'
@@ -13,7 +21,13 @@ interface IProps {
 }
 
 function ConnectCard({ id, onClose }: IProps) {
-  const { data, loading: querying } = useCardsQuery({
+  const [form] = Form.useForm()
+
+  const {
+    data,
+    loading: querying,
+    refetch,
+  } = useCardsQuery({
     variables: {
       courseId: id,
     },
@@ -24,8 +38,44 @@ function ConnectCard({ id, onClose }: IProps) {
     setCards(data?.cards || [])
   }, [data])
 
-  const onDelete = (key: string) => {
-    alert(key)
+  const [submit] = useCommitCardMutation()
+  const [remove] = useRemoveCardMutation()
+
+  const onSubmit = async (method: Method, id: string, input: CardInput) => {
+    await submit({
+      variables: {
+        commitId: id,
+        input: {
+          type: input.type,
+          times: input.times,
+          name: input.name,
+          duration: input.duration,
+        },
+        method,
+      },
+      onError: () => {
+        message.error(`保存失败`)
+      },
+      onCompleted: () => {
+        message.success(`保存成功`)
+        refetch()
+      },
+    })
+  }
+
+  const onDelete = async (id: string) => {
+    await remove({
+      variables: {
+        id,
+      },
+      onError: () => {
+        message.error(`删除失败`)
+      },
+      onCompleted: () => {
+        message.success(`删除成功`)
+        refetch()
+      },
+    })
   }
 
   return (
@@ -44,31 +94,37 @@ function ConnectCard({ id, onClose }: IProps) {
         rowKey="id"
         loading={querying}
         editable={{
-          // form: form,
+          form: form,
           actionRender: (_row, _config, defaultDoms) => {
             return [defaultDoms.save, defaultDoms.cancel]
           },
-          // onValuesChange(record, dataSource) {
-          //   console.log(record, dataSource)
-          // },
-          onSave: async (rowKey, d) => {
-            console.log(rowKey, d)
-            // const values = await form.validateFields()
-            // const startTime = formatTime(values[d.key].startTime)
-            // const endTime = formatTime(values[d.key].endTime)
-            // const data = {
-            //   key: d.key,
-            //   startTime,
-            //   endTime,
-            // }
-            // if (currentValue.find((item) => item.key === rowKey)) {
-            //   const newValue = currentValue.map((item) => {
-            //     return item.key === rowKey ? data : { ...item }
-            //   })
-            //   onFinish(newValue)
-            //   return
-            // }
-            // onFinish([...currentValue, data])
+          onSave: async (_rowKey, rowData) => {
+            // console.log(rowKey, rowData)
+            if (rowData.type === CardType.Time && !rowData.times) {
+              rowData.duration = 0
+              message.error('请输入次数')
+              return
+            }
+            if (rowData.type === CardType.Duration && !rowData.duration) {
+              rowData.times = 0
+              message.error('请输入次数')
+              return
+            }
+            if (rowData.id === 'new') {
+              onSubmit(Method.Create, id, {
+                name: rowData.name,
+                type: rowData.type,
+                times: rowData.times,
+                duration: rowData.duration,
+              })
+              return
+            }
+            onSubmit(Method.Update, rowData.id, {
+              name: rowData.name,
+              type: rowData.type,
+              times: rowData.times,
+              duration: rowData.duration,
+            })
           },
         }}
         value={cards}
@@ -85,31 +141,6 @@ function ConnectCard({ id, onClose }: IProps) {
         }}
         columns={getColumns({ onDelete: onDelete })}
       />
-
-      {/* <Row gutter={16}>
-        <Col span={12}>
-          <Button
-            icon={<RedoOutlined />}
-            style={{ width: '100%' }}
-            type="primary"
-            onClick={onWorkdaySync}
-            disabled={!isWorkDay(currentDay.key)}
-          >
-            全工作日同步
-          </Button>
-        </Col>
-        <Col span={12}>
-          <Button
-            icon={<ChromeOutlined />}
-            style={{ width: '100%' }}
-            type="primary"
-            danger
-            onClick={onWeekSync}
-          >
-            全周同步
-          </Button>
-        </Col>
-      </Row> */}
     </Drawer>
   )
 }

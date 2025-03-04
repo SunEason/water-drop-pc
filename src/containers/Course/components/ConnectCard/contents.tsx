@@ -18,6 +18,7 @@ export const getColumns = ({ onDelete }: IColumns): ProColumns[] => {
     {
       title: '名称',
       dataIndex: 'name',
+      width: 120,
       key: 'name',
     },
     {
@@ -25,6 +26,7 @@ export const getColumns = ({ onDelete }: IColumns): ProColumns[] => {
       dataIndex: 'type',
       key: 'type',
       valueType: 'select',
+      width: 60,
       valueEnum: {
         [CardType.Time]: {
           text: '次卡',
@@ -41,12 +43,14 @@ export const getColumns = ({ onDelete }: IColumns): ProColumns[] => {
       title: '次数(次）',
       dataIndex: 'times',
       valueType: 'digit',
+      width: 60,
       key: 'times',
     },
     {
       title: '有效期（天）',
       dataIndex: 'duration',
       valueType: 'digit',
+      width: 60,
       key: 'duration',
     },
     {

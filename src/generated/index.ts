@@ -486,7 +486,7 @@ export type CardsQuery = {
 
 export type CommitCardMutationVariables = Exact<{
   input: CardInput
-  commitCardId: Scalars['String']['input']
+  commitId: Scalars['String']['input']
   method: Method
 }>
 
@@ -502,6 +502,15 @@ export type CommitCardMutation = {
     times?: number | null
     duration?: number | null
   }
+}
+
+export type RemoveCardMutationVariables = Exact<{
+  id: Scalars['String']['input']
+}>
+
+export type RemoveCardMutation = {
+  __typename?: 'Mutation'
+  removeCard: boolean
 }
 
 export type PageCourseQueryVariables = Exact<{
@@ -1052,10 +1061,10 @@ export type CardsQueryResult = Apollo.QueryResult<
 export const CommitCardDocument = gql`
   mutation CommitCard(
     $input: CardInput!
-    $commitCardId: String!
+    $commitId: String!
     $method: Method!
   ) {
-    commitCard(input: $input, id: $commitCardId, method: $method) {
+    commitCard(input: $input, id: $commitId, method: $method) {
       id
       createTime
       updateTime
@@ -1085,7 +1094,7 @@ export type CommitCardMutationFn = Apollo.MutationFunction<
  * const [commitCardMutation, { data, loading, error }] = useCommitCardMutation({
  *   variables: {
  *      input: // value for 'input'
- *      commitCardId: // value for 'commitCardId'
+ *      commitId: // value for 'commitId'
  *      method: // value for 'method'
  *   },
  * });
@@ -1109,6 +1118,53 @@ export type CommitCardMutationResult = Apollo.MutationResult<CommitCardMutation>
 export type CommitCardMutationOptions = Apollo.BaseMutationOptions<
   CommitCardMutation,
   CommitCardMutationVariables
+>
+export const RemoveCardDocument = gql`
+  mutation RemoveCard($id: String!) {
+    removeCard(id: $id)
+  }
+`
+export type RemoveCardMutationFn = Apollo.MutationFunction<
+  RemoveCardMutation,
+  RemoveCardMutationVariables
+>
+
+/**
+ * __useRemoveCardMutation__
+ *
+ * To run a mutation, you first call `useRemoveCardMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useRemoveCardMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [removeCardMutation, { data, loading, error }] = useRemoveCardMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useRemoveCardMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    RemoveCardMutation,
+    RemoveCardMutationVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useMutation<RemoveCardMutation, RemoveCardMutationVariables>(
+    RemoveCardDocument,
+    options,
+  )
+}
+export type RemoveCardMutationHookResult = ReturnType<
+  typeof useRemoveCardMutation
+>
+export type RemoveCardMutationResult = Apollo.MutationResult<RemoveCardMutation>
+export type RemoveCardMutationOptions = Apollo.BaseMutationOptions<
+  RemoveCardMutation,
+  RemoveCardMutationVariables
 >
 export const PageCourseDocument = gql`
   query PageCourse($input: PageCourseInput) {

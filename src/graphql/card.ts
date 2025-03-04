@@ -17,10 +17,10 @@ export const Cards = gql`
 export const CommitCard = gql`
   mutation CommitCard(
     $input: CardInput!
-    $commitCardId: String!
+    $commitId: String!
     $method: Method!
   ) {
-    commitCard(input: $input, id: $commitCardId, method: $method) {
+    commitCard(input: $input, id: $commitId, method: $method) {
       id
       createTime
       updateTime
@@ -29,5 +29,11 @@ export const CommitCard = gql`
       times
       duration
     }
+  }
+`
+
+export const removeCard = gql`
+  mutation RemoveCard($id: String!) {
+    removeCard(id: $id)
   }
 `
