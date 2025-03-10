@@ -8,6 +8,7 @@ import { Dropdown, Tooltip } from 'antd'
 import { HomeOutlined, LogoutOutlined, ShopOutlined } from '@ant-design/icons'
 import { useRoute, useRouter } from '@/hooks/router'
 import OrgSelect from '@/components/OrgSelect'
+import { useEffect } from 'react'
 
 const menuItemRender = (props: MenuDataItem, defaultDom: React.ReactNode) => {
   return <Link to={props.path || '/'}>{defaultDom}</Link>
@@ -19,6 +20,10 @@ function Layout() {
   const router = useRouter()
   const route = useRoute()
   const { store } = useUserContext()
+
+  useEffect(() => {
+    router.go(ROUTE_KEY.HOME)
+  }, [])
 
   const isOrgManage = () => {
     if (route?.path === ROUTE_CONFIG[ROUTE_KEY.ORG].path) {
