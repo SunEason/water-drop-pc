@@ -14,6 +14,7 @@ export const ROUTE_KEY = {
   ORG: 'org',
   ORG_EMPTY: 'org_empty',
   COURSE: 'course',
+  PRODUCT: 'product',
 }
 export type RouteKey = keyof typeof ROUTE_KEY
 
@@ -46,6 +47,11 @@ export const ROUTE_CONFIG: Record<string, IRoute> = {
   [ROUTE_KEY.COURSE]: {
     path: 'course',
     name: '课程信息',
+    icon: <PicRightOutlined />,
+  },
+  [ROUTE_KEY.PRODUCT]: {
+    path: 'product',
+    name: '产品信息',
     icon: <PicRightOutlined />,
   },
 }
