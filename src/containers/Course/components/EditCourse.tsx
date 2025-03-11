@@ -47,22 +47,24 @@ function EditCourse({ id, onClose, onSuccess }: IProps) {
   const onFinish = async () => {
     const values = await form.validateFields()
     if (!values) return
-    const res = await submit({
+    submit({
       variables: {
         id: id ? id : undefined,
         input: {
           ...values,
         },
       },
+      onCompleted: () => {
+        message.success(`${title}成功`)
+        onClose()
+        onSuccess()
+      },
+      onError: (e) => {
+        message.error(`${title}失败`)
+        console.error(e)
+        return
+      },
     })
-    if (res.errors) {
-      message.error(`${title}失败`)
-      console.error(res.errors)
-      return
-    }
-    message.success(`${title}成功`)
-    onClose()
-    onSuccess()
   }
 
   return (

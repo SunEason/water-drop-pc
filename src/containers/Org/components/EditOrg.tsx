@@ -49,9 +49,15 @@ function EditOrg({ id, onClose, onSuccess }: IProps) {
       ...org,
       tags: org?.tags?.split(','),
       logo: [{ url: org?.logo }],
-      businessLicense: [{ url: org?.businessLicense }],
-      identityCardFrontImg: [{ url: org?.identityCardFrontImg }],
-      identityCardBackImg: [{ url: org?.identityCardBackImg }],
+      businessLicense: org?.businessLicense
+        ? [{ url: org?.businessLicense }]
+        : [],
+      identityCardFrontImg: org?.identityCardFrontImg
+        ? [{ url: org?.identityCardFrontImg }]
+        : [],
+      identityCardBackImg: org?.identityCardBackImg
+        ? [{ url: org?.identityCardBackImg }]
+        : [],
       frontImages: org?.frontImages || [],
       roomImages: org?.roomImages || [],
       otherImages: org?.otherImages || [],
@@ -64,7 +70,7 @@ function EditOrg({ id, onClose, onSuccess }: IProps) {
   const onFinish = async () => {
     const values = await form.validateFields()
     if (!values) return
-    const res = await submit({
+    submit({
       variables: {
         id: id ? id : undefined,
         input: {
@@ -85,15 +91,17 @@ function EditOrg({ id, onClose, onSuccess }: IProps) {
           })),
         },
       },
+      onCompleted: () => {
+        message.success(`${title}成功`)
+        onClose()
+        onSuccess()
+      },
+      onError: (e) => {
+        message.error(`${title}失败`)
+        console.error(e)
+        return
+      },
     })
-    if (res.errors) {
-      message.error(`${title}失败`)
-      console.error(res.errors)
-      return
-    }
-    message.success(`${title}成功`)
-    onClose()
-    onSuccess()
   }
 
   return (

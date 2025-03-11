@@ -96,3 +96,18 @@ export const removeProduct = gql`
     removeProduct(id: $id)
   }
 `
+
+export const changeProductStatus = gql`
+  mutation ChangeProductStatus($id: String!, $status: ProductStatus!) {
+    changeStatus(id: $id, status: $status)
+  }
+`
+
+export const getProductTypes = gql`
+  query ProductTypes {
+    productTypes {
+      key
+      title
+    }
+  }
+`

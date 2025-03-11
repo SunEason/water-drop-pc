@@ -1,3 +1,4 @@
+import { ProductStatus } from '@/generated'
 import { ProColumns } from '@ant-design/pro-components'
 import { Image, Popconfirm, Space } from 'antd'
 
@@ -5,7 +6,7 @@ interface IProps {
   onEditHandler: (id: string) => void
   onDeleteHandler: (id: string) => void
   // onCardHandler: (id: string) => void
-  // onStatusChangeHandler: (id: string, status: string) => void
+  onStatusChangeHandler: (id: string, status: ProductStatus) => void
 }
 
 // const PRODUCT_STATUS = {
@@ -16,8 +17,8 @@ interface IProps {
 export const getColumns: (props: IProps) => ProColumns[] = ({
   onEditHandler,
   onDeleteHandler,
+  onStatusChangeHandler,
   // onCardHandler,
-  // onStatusChangeHandler,
 }) => [
   {
     dataIndex: 'id',
@@ -97,15 +98,13 @@ export const getColumns: (props: IProps) => ProColumns[] = ({
     width: 200,
     render: (text, entity) => (
       <Space>
-        {/* {entity.status === PRODUCT_STATUS.UN_LIST ? (
+        {entity.status === ProductStatus.UnList ? (
           <a
             key="list"
             style={{
               color: 'blue',
             }}
-            onClick={() =>
-              onStatusChangeHandler(entity.id, PRODUCT_STATUS.LIST)
-            }
+            onClick={() => onStatusChangeHandler(entity.id, ProductStatus.List)}
           >
             上架
           </a>
@@ -116,13 +115,13 @@ export const getColumns: (props: IProps) => ProColumns[] = ({
               color: 'green',
             }}
             onClick={() =>
-              onStatusChangeHandler(entity.id, PRODUCT_STATUS.UN_LIST)
+              onStatusChangeHandler(entity.id, ProductStatus.UnList)
             }
           >
             下架
           </a>
         )}
-        <a key="card" onClick={() => onCardHandler(entity.id)}>
+        {/* <a key="card" onClick={() => onCardHandler(entity.id)}>
           绑定消费卡
         </a> */}
         <a key="edit" onClick={() => onEditHandler(entity.id)}>

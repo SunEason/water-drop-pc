@@ -1,17 +1,23 @@
 import { PAGE_SIZE } from '@/const/pagination'
-import { usePageProductLazyQuery, useRemoveProductMutation } from '@/generated'
+import {
+  ProductStatus,
+  useChangeProductStatusMutation,
+  usePageProductLazyQuery,
+  useRemoveProductMutation,
+} from '@/generated'
 import { ActionType, PageContainer, ProTable } from '@ant-design/pro-components'
 import { getColumns } from './contents'
 import { Button, message } from 'antd'
 import { PlusOutlined } from '@ant-design/icons'
 import { useRef, useState } from 'react'
-import EditCourse from './components/EditProduct'
+import EditProduct from './components/EditProduct'
 
 function Product() {
   const actionRef = useRef<ActionType>()
   const [getProducts, { loading }] = usePageProductLazyQuery()
 
   const [remove] = useRemoveProductMutation()
+  const [changeStatus] = useChangeProductStatusMutation()
 
   const [showEdit, setShowEdit] = useState(false)
   const [curId, setCurId] = useState('')
@@ -24,6 +30,25 @@ function Product() {
   const editProduct = (id: string) => {
     setCurId(id)
     setShowEdit(true)
+  }
+
+  const onStatusChangeHandler = (id: string, status: ProductStatus) => {
+    changeStatus({
+      variables: {
+        id,
+        status,
+      },
+      onCompleted: () => {
+        if (status === ProductStatus.List) message.success('上架成功')
+        else message.success('下架成功')
+        actionRef.current?.reload()
+      },
+      onError: (error) => {
+        if (status === ProductStatus.List) message.error('上架失败')
+        else message.error('下架失败')
+        console.error(error)
+      },
+    })
   }
 
   const removeProduct = (id: string) => {
@@ -55,6 +80,8 @@ function Product() {
         columns={getColumns({
           onEditHandler: (id) => editProduct(id),
           onDeleteHandler: (id) => removeProduct(id),
+          onStatusChangeHandler: (id, status) =>
+            onStatusChangeHandler(id, status),
         })}
         pagination={{
           defaultPageSize: PAGE_SIZE,
@@ -95,7 +122,7 @@ function Product() {
         }}
       />
       {showEdit && (
-        <EditCourse
+        <EditProduct
           id={curId}
           onClose={() => setShowEdit(false)}
           // onSuccess={() => actionRef.current?.reload()}
