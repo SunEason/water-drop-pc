@@ -11,6 +11,7 @@ import { Button, message } from 'antd'
 import { PlusOutlined } from '@ant-design/icons'
 import { useRef, useState } from 'react'
 import EditProduct from './components/EditProduct'
+import ConsumeCard from './components/ConsumeCard'
 
 function Product() {
   const actionRef = useRef<ActionType>()
@@ -19,8 +20,9 @@ function Product() {
   const [remove] = useRemoveProductMutation()
   const [changeStatus] = useChangeProductStatusMutation()
 
-  const [showEdit, setShowEdit] = useState(false)
   const [curId, setCurId] = useState('')
+  const [showEdit, setShowEdit] = useState(false)
+  const [showCardsModel, setShowCardsModel] = useState(false)
 
   const addProduct = () => {
     setCurId('')
@@ -30,6 +32,11 @@ function Product() {
   const editProduct = (id: string) => {
     setCurId(id)
     setShowEdit(true)
+  }
+
+  const showConsumeCard = (id: string) => {
+    setCurId(id)
+    setShowCardsModel(true)
   }
 
   const onStatusChangeHandler = (id: string, status: ProductStatus) => {
@@ -82,6 +89,7 @@ function Product() {
           onDeleteHandler: (id) => removeProduct(id),
           onStatusChangeHandler: (id, status) =>
             onStatusChangeHandler(id, status),
+          onCardHandler: (id) => showConsumeCard(id),
         })}
         pagination={{
           defaultPageSize: PAGE_SIZE,
@@ -128,6 +136,9 @@ function Product() {
           // onSuccess={() => actionRef.current?.reload()}
           onSuccess={() => actionRef.current?.reload()}
         />
+      )}
+      {showCardsModel && (
+        <ConsumeCard id={curId} onClose={() => setShowCardsModel(false)} />
       )}
     </PageContainer>
   )

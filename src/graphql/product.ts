@@ -19,9 +19,6 @@ export const pageProduct = gql`
         stock
         type
         updateTime
-        cards {
-          name
-        }
       }
       pageInfo {
         current
@@ -50,9 +47,6 @@ export const getProduct = gql`
       bannerUrl
       originalPrice
       preferentialPrice
-      cards {
-        name
-      }
     }
   }
 `
@@ -108,6 +102,44 @@ export const getProductTypes = gql`
     productTypes {
       key
       title
+    }
+  }
+`
+
+export const getProductCards = gql`
+  query GetProductCards($id: String!) {
+    product(id: $id) {
+      cards {
+        id
+        createTime
+        updateTime
+        name
+        type
+        times
+        duration
+        course {
+          id
+          name
+        }
+      }
+    }
+  }
+`
+
+export const setProductCards = gql`
+  mutation SetProductCards($id: String!, $cards: [String!]) {
+    setCards(id: $id, cards: $cards) {
+      id
+      createTime
+      updateTime
+      name
+      type
+      times
+      duration
+      course {
+        id
+        name
+      }
     }
   }
 `

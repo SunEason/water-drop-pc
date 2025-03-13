@@ -5,7 +5,7 @@ import { Image, Popconfirm, Space } from 'antd'
 interface IProps {
   onEditHandler: (id: string) => void
   onDeleteHandler: (id: string) => void
-  // onCardHandler: (id: string) => void
+  onCardHandler: (id: string) => void
   onStatusChangeHandler: (id: string, status: ProductStatus) => void
 }
 
@@ -18,7 +18,7 @@ export const getColumns: (props: IProps) => ProColumns[] = ({
   onEditHandler,
   onDeleteHandler,
   onStatusChangeHandler,
-  // onCardHandler,
+  onCardHandler,
 }) => [
   {
     dataIndex: 'id',
@@ -121,9 +121,9 @@ export const getColumns: (props: IProps) => ProColumns[] = ({
             下架
           </a>
         )}
-        {/* <a key="card" onClick={() => onCardHandler(entity.id)}>
+        <a key="card" onClick={() => onCardHandler(entity.id)}>
           绑定消费卡
-        </a> */}
+        </a>
         <a key="edit" onClick={() => onEditHandler(entity.id)}>
           编辑
         </a>

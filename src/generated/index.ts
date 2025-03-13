@@ -40,6 +40,7 @@ export type AuthLogin = {
 
 export type Card = {
   __typename?: 'Card'
+  course?: Maybe<Course>
   createTime: Scalars['DateTime']['output']
   duration?: Maybe<Scalars['Int']['output']>
   id: Scalars['String']['output']
@@ -105,6 +106,7 @@ export type Mutation = {
   removeUser?: Maybe<User>
   /** 发送验证码 */
   sendMessage?: Maybe<Scalars['Boolean']['output']>
+  setCards?: Maybe<Array<Card>>
   setOrderTime?: Maybe<Array<ReducibleTime>>
   updateCard: Card
   updateCourse?: Maybe<Course>
@@ -188,6 +190,11 @@ export type MutationRemoveUserArgs = {
 
 export type MutationSendMessageArgs = {
   tel: Scalars['String']['input']
+}
+
+export type MutationSetCardsArgs = {
+  cards?: InputMaybe<Array<Scalars['String']['input']>>
+  id: Scalars['String']['input']
 }
 
 export type MutationSetOrderTimeArgs = {
@@ -918,7 +925,6 @@ export type PageProductQuery = {
       stock: number
       type?: string | null
       updateTime: string
-      cards?: Array<{ __typename?: 'Card'; name: string }> | null
     }> | null
     pageInfo: {
       __typename?: 'pageInfo'
@@ -952,7 +958,6 @@ export type ProductQuery = {
     bannerUrl?: string | null
     originalPrice: number
     preferentialPrice: number
-    cards?: Array<{ __typename?: 'Card'; name: string }> | null
   } | null
 }
 
@@ -1021,6 +1026,50 @@ export type ProductTypesQuery = {
     __typename?: 'ProductType'
     key: string
     title: string
+  }> | null
+}
+
+export type GetProductCardsQueryVariables = Exact<{
+  id: Scalars['String']['input']
+}>
+
+export type GetProductCardsQuery = {
+  __typename?: 'Query'
+  product?: {
+    __typename?: 'Product'
+    cards?: Array<{
+      __typename?: 'Card'
+      id: string
+      createTime: string
+      updateTime?: string | null
+      name: string
+      type: CardType
+      times?: number | null
+      duration?: number | null
+      course?: { __typename?: 'Course'; id: string; name: string } | null
+    }> | null
+  } | null
+}
+
+export type SetProductCardsMutationVariables = Exact<{
+  id: Scalars['String']['input']
+  cards?: InputMaybe<
+    Array<Scalars['String']['input']> | Scalars['String']['input']
+  >
+}>
+
+export type SetProductCardsMutation = {
+  __typename?: 'Mutation'
+  setCards?: Array<{
+    __typename?: 'Card'
+    id: string
+    createTime: string
+    updateTime?: string | null
+    name: string
+    type: CardType
+    times?: number | null
+    duration?: number | null
+    course?: { __typename?: 'Course'; id: string; name: string } | null
   }> | null
 }
 
@@ -2390,9 +2439,6 @@ export const PageProductDocument = gql`
         stock
         type
         updateTime
-        cards {
-          name
-        }
       }
       pageInfo {
         current
@@ -2489,9 +2535,6 @@ export const ProductDocument = gql`
       bannerUrl
       originalPrice
       preferentialPrice
-      cards {
-        name
-      }
     }
   }
 `
@@ -2808,6 +2851,161 @@ export type ProductTypesSuspenseQueryHookResult = ReturnType<
 export type ProductTypesQueryResult = Apollo.QueryResult<
   ProductTypesQuery,
   ProductTypesQueryVariables
+>
+export const GetProductCardsDocument = gql`
+  query GetProductCards($id: String!) {
+    product(id: $id) {
+      cards {
+        id
+        createTime
+        updateTime
+        name
+        type
+        times
+        duration
+        course {
+          id
+          name
+        }
+      }
+    }
+  }
+`
+
+/**
+ * __useGetProductCardsQuery__
+ *
+ * To run a query within a React component, call `useGetProductCardsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetProductCardsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetProductCardsQuery({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useGetProductCardsQuery(
+  baseOptions: Apollo.QueryHookOptions<
+    GetProductCardsQuery,
+    GetProductCardsQueryVariables
+  > &
+    (
+      | { variables: GetProductCardsQueryVariables; skip?: boolean }
+      | { skip: boolean }
+    ),
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useQuery<GetProductCardsQuery, GetProductCardsQueryVariables>(
+    GetProductCardsDocument,
+    options,
+  )
+}
+export function useGetProductCardsLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    GetProductCardsQuery,
+    GetProductCardsQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useLazyQuery<
+    GetProductCardsQuery,
+    GetProductCardsQueryVariables
+  >(GetProductCardsDocument, options)
+}
+export function useGetProductCardsSuspenseQuery(
+  baseOptions?:
+    | Apollo.SkipToken
+    | Apollo.SuspenseQueryHookOptions<
+        GetProductCardsQuery,
+        GetProductCardsQueryVariables
+      >,
+) {
+  const options =
+    baseOptions === Apollo.skipToken
+      ? baseOptions
+      : { ...defaultOptions, ...baseOptions }
+  return Apollo.useSuspenseQuery<
+    GetProductCardsQuery,
+    GetProductCardsQueryVariables
+  >(GetProductCardsDocument, options)
+}
+export type GetProductCardsQueryHookResult = ReturnType<
+  typeof useGetProductCardsQuery
+>
+export type GetProductCardsLazyQueryHookResult = ReturnType<
+  typeof useGetProductCardsLazyQuery
+>
+export type GetProductCardsSuspenseQueryHookResult = ReturnType<
+  typeof useGetProductCardsSuspenseQuery
+>
+export type GetProductCardsQueryResult = Apollo.QueryResult<
+  GetProductCardsQuery,
+  GetProductCardsQueryVariables
+>
+export const SetProductCardsDocument = gql`
+  mutation SetProductCards($id: String!, $cards: [String!]) {
+    setCards(id: $id, cards: $cards) {
+      id
+      createTime
+      updateTime
+      name
+      type
+      times
+      duration
+      course {
+        id
+        name
+      }
+    }
+  }
+`
+export type SetProductCardsMutationFn = Apollo.MutationFunction<
+  SetProductCardsMutation,
+  SetProductCardsMutationVariables
+>
+
+/**
+ * __useSetProductCardsMutation__
+ *
+ * To run a mutation, you first call `useSetProductCardsMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useSetProductCardsMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [setProductCardsMutation, { data, loading, error }] = useSetProductCardsMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *      cards: // value for 'cards'
+ *   },
+ * });
+ */
+export function useSetProductCardsMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    SetProductCardsMutation,
+    SetProductCardsMutationVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useMutation<
+    SetProductCardsMutation,
+    SetProductCardsMutationVariables
+  >(SetProductCardsDocument, options)
+}
+export type SetProductCardsMutationHookResult = ReturnType<
+  typeof useSetProductCardsMutation
+>
+export type SetProductCardsMutationResult =
+  Apollo.MutationResult<SetProductCardsMutation>
+export type SetProductCardsMutationOptions = Apollo.BaseMutationOptions<
+  SetProductCardsMutation,
+  SetProductCardsMutationVariables
 >
 export const GetUsersDocument = gql`
   query GetUsers {
